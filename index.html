@@ -3069,6 +3069,98 @@
       background: var(--green);
     }
 
+    /* Batch Picker Bar (Pelaksanaan, Evaluasi, Materi, Kehadiran, Laporan) */
+    .batch-picker-bar {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .batch-picker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .batch-picker-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 380px;
+    }
+
+    .batch-picker-select-wrap select {
+      flex: 1 1 auto;
+      font-weight: 600;
+      color: var(--navy);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+
+    .batch-picker-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .batch-picker-pills {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .batch-picker-nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line-2);
+    }
+
+    .btn-subnav {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      color: var(--ink-2);
+      background: var(--surface-2);
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all .15s ease;
+    }
+
+    .btn-subnav:hover {
+      background: var(--brand-soft);
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .btn-subnav.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .btn-subnav.active .ico {
+      stroke: #fff;
+    }
+
     /* ------------------------------------------------------------------ */
     /* Responsif */
 
@@ -4151,7 +4243,7 @@
       }
 
       function defaultPrefs() {
-        return { sidebarCollapsed: false, density: 'nyaman', hideGuide: false, kakView: 'board', batchView: 'table' };
+        return { sidebarCollapsed: false, density: 'nyaman', hideGuide: false, kakView: 'board', batchView: 'table', lastBatchId: 'BTCLS-B1' };
       }
 
       function normalizeRevenue(rev) {
@@ -4448,6 +4540,10 @@
       }
 
       function getPelaksanaan(batchId) {
+        if (!batchId) batchId = 'PICU_NICU-B1';
+        if (!state.pelaksanaan[batchId]) {
+          return loadGoldenSample(batchId);
+        }
         var base = defaultPelaksanaan();
         var saved = state.pelaksanaan[batchId];
         if (!saved) return base;
@@ -4464,67 +4560,98 @@
 
       function loadGoldenSample(batchId) {
         var g = SEED.pembelajaranGolden;
-        var pel = getPelaksanaan(batchId);
-        var namaContoh = ['Ns. Rina Kartika', 'Ns. Budi Santoso', 'Bd. Sari Dewi', 'Ns. Hendra Wijaya', 'Ns. Maya Putri', 'Bd. Diah Lestari', 'Ns. Agus Pratama', 'Ns. Lestari Wulandari'];
+        var pel = defaultPelaksanaan();
+        var b = getBatch(batchId);
+        var pName = b ? b.programName : 'Pelatihan Klinis BDI';
+        var shortName = b ? b.label : 'Batch BDI';
+
+        var namaContoh = ['Ns. Rina Kartika, S.Kep', 'Ns. Budi Santoso, S.Kep', 'Bd. Sari Dewi, S.Tr.Keb', 'Ns. Hendra Wijaya, S.Kep', 'Ns. Maya Putri, S.Kep', 'Bd. Diah Lestari, S.Tr.Keb', 'Ns. Agus Pratama, S.Kep', 'Ns. Lestari Wulandari, S.Kep'];
         var jkContoh = ['P', 'L', 'P', 'L', 'P', 'P', 'L', 'P'];
         var instContoh = ['RSU Bunda Margonda', 'RSIA Bunda Jakarta', 'RSU Bunda Padang', 'RSU Bunda Jakarta', 'RSU Bunda Margonda', 'RSIA Bunda Ciputat', 'RSU Bunda Denpasar', 'RSU Bunda Jakarta'];
+
         pel.sesi = [
-          { id: 'NON1', hari: 1, mulai: '07:30', selesai: '08:00', materi: 'Registrasi & Pembukaan (Non-JPL)', menit: 30, nonJpl: true, narasumber: 'Panitia BDI' },
-          { id: 'S1', hari: 1, mulai: '08:00', selesai: '11:00', materi: 'Materi Inti 1 — Teori & Konsep', menit: 180, nonJpl: false, narasumber: 'dr. Narasumber A, Sp.An' },
-          { id: 'NON2', hari: 1, mulai: '11:00', selesai: '12:00', materi: 'ISHOMA (Non-JPL)', menit: 60, nonJpl: true, narasumber: '-' },
-          { id: 'S2', hari: 1, mulai: '12:00', selesai: '15:00', materi: 'Materi Inti 2 — Studi Kasus & Simulasi', menit: 180, nonJpl: false, narasumber: 'Ns. Narasumber B, M.Kep' },
-          { id: 'S3', hari: 2, mulai: '08:00', selesai: '09:30', materi: 'Ujian Praktik & Evaluasi Akhir', menit: 90, nonJpl: false, narasumber: 'Tim Instruktur BDI' }
+          { id: 'NON1', hari: 1, mulai: '07:30', selesai: '08:00', materi: 'Registrasi & Persiapan Zoom / LMS (Non-JPL)', menit: 30, nonJpl: true, narasumber: 'Panitia Pelaksana BDI' },
+          { id: 'NON2', hari: 1, mulai: '08:00', selesai: '08:30', materi: 'Pembukaan & Building Learning Commitment (BLC)', menit: 30, nonJpl: true, narasumber: 'Pimpinan & Fasilitator BDI' },
+          { id: 'S1', hari: 1, mulai: '08:30', selesai: '11:30', materi: 'Materi 1 — Teori Dasar & Asuhan: ' + pName, menit: 180, nonJpl: false, narasumber: 'dr. H. Ahmad Fauzi, Sp.A' },
+          { id: 'NON3', hari: 1, mulai: '11:30', selesai: '12:30', materi: 'ISHOMA (Istirahat, Sholat, Makan)', menit: 60, nonJpl: true, narasumber: '-' },
+          { id: 'S2', hari: 1, mulai: '12:30', selesai: '15:30', materi: 'Materi 2 — Studi Kasus & Simulasi Tindakan', menit: 180, nonJpl: false, narasumber: 'Ns. Siti Rahmawati, M.Kep, Sp.Kep.An' },
+          { id: 'S3', hari: 2, mulai: '08:30', selesai: '10:00', materi: 'Materi 3 — Ujian Praktik / OSCE & Evaluasi Akhir', menit: 90, nonJpl: false, narasumber: 'Tim Instruktur & Penguji BDI' },
+          { id: 'NON4', hari: 2, mulai: '10:00', selesai: '10:30', materi: 'Refleksi, Evaluasi Penyelenggaraan & Penutupan', menit: 30, nonJpl: true, narasumber: 'Panitia & Tim Evaluasi BDI' }
         ];
+
         pel.peserta = g.peserta.map(function (pid, i) {
-          return { id: pid, nama: namaContoh[i] || ('Peserta ' + pid), email: pid.toLowerCase() + '@contoh.bdi.id', jk: jkContoh[i] || 'P', institusi: instContoh[i] || 'RS Mitra' };
+          return { id: pid, nama: namaContoh[i] || ('Peserta ' + pid), email: pid.toLowerCase() + '@mitra.bdi.id', jk: jkContoh[i] || 'P', institusi: instContoh[i] || 'RS Mitra BDI', profesi: (jkContoh[i] === 'L' ? 'Perawat' : (i % 3 === 0 ? 'Bidan' : 'Perawat')) };
         });
+
         pel.kehadiran = clone(g.catatan);
         pel.komponen = clone(g.komponen);
         pel.aturanKelulusan = clone(g.aturan);
         pel.nilai = clone(g.nilai);
         pel.preTest = { P1: 55, P2: 45, P3: 60, P4: 50, P5: 65, P6: 40, P7: 50, P8: 55 };
+
         pel.materi = [
-          { id: 'm1', sesiId: null, jenis: 'informasi_penyelenggaraan', judul: 'Informasi Penyelenggaraan & Tata Tertib', tautan: 'https://drive.google.com/file/d/contoh-info/view', versi: 1, status: 'diunggah', statusTautan: 'baik' },
-          { id: 'm2', sesiId: 'S1', jenis: 'bahan_tayang', judul: 'Slide Materi Inti 1', tautan: 'https://drive.google.com/file/d/contoh-s1/view', versi: 2, status: 'final', statusTautan: 'baik' },
-          { id: 'm3', sesiId: 'S2', jenis: 'modul', judul: 'Modul Praktik & Studi Kasus Sesi 2', tautan: 'https://drive.google.com/file/d/contoh-s2/view', versi: 1, status: 'draf', statusTautan: 'belum_dicek' },
-          { id: 'm4', sesiId: null, jenis: 'evaluasi', judul: 'Instrumen Pre/Post Test & Rubrik Praktik', tautan: 'https://docs.google.com/document/d/contoh-eval/edit', versi: 1, status: 'final', statusTautan: 'baik' }
+          { id: 'm1', sesiId: null, jenis: 'informasi_penyelenggaraan', judul: 'Informasi Penyelenggaraan & Panduan Peserta (' + shortName + ')', tautan: 'https://drive.google.com/file/d/bdi-panduan-peserta/view', versi: 1, status: 'diunggah', statusTautan: 'baik' },
+          { id: 'm2', sesiId: 'S1', jenis: 'bahan_tayang', judul: 'Bahan Tayang (Slide PPT) Sesi 1: ' + pName, tautan: 'https://drive.google.com/file/d/bdi-slide-materi-1/view', versi: 2, status: 'final', statusTautan: 'baik' },
+          { id: 'm3', sesiId: 'S2', jenis: 'modul', judul: 'Modul Praktikum & Lembar Kerja Kasus Klinis Sesi 2', tautan: 'https://drive.google.com/file/d/bdi-modul-kasus/view', versi: 1, status: 'final', statusTautan: 'baik' },
+          { id: 'm4', sesiId: null, jenis: 'evaluasi', judul: 'Instrumen Evaluasi (Kuis Pre/Post Test & Rubrik Penilaian OSCE)', tautan: 'https://docs.google.com/document/d/bdi-rubrik-evaluasi/edit', versi: 1, status: 'diunggah', statusTautan: 'baik' },
+          { id: 'm5', sesiId: 'S2', jenis: 'video', judul: 'Video Demonstrasi Prosedur Tindakan Klinis', tautan: 'https://drive.google.com/file/d/bdi-video-demo/view', versi: 1, status: 'final', statusTautan: 'baik' }
         ];
+
         pel.penugasan = [
           {
-            id: 't1', judul: 'Tugas Studi Kasus Klinis', tenggat: '2027-02-10', komponenId: 'K2',
+            id: 't1', judul: 'Penugasan Analisis Kasus & Rencana Asuhan', tenggat: '2027-02-10', komponenId: 'K2',
+            instruksi: 'Peserta menyusun telaah kasus sesuai format standar dan mengunggah ke link Drive yang disediakan.',
             pengumpulan: [
-              { pesertaId: 'P1', dikumpulkanPada: '2027-02-09', skor: 90, tautan: 'https://drive.google.com/file/d/t1-p1/view' },
-              { pesertaId: 'P2', dikumpulkanPada: '2027-02-11', skor: 80, tautan: 'https://drive.google.com/file/d/t1-p2/view' },
-              { pesertaId: 'P3', dikumpulkanPada: '2027-02-10', skor: 90, tautan: '' },
-              { pesertaId: 'P4', dikumpulkanPada: '2027-02-10', skor: 80, tautan: '' },
-              { pesertaId: 'P5', dikumpulkanPada: '2027-02-12', skor: null, tautan: '' }
+              { pesertaId: 'P1', dikumpulkanPada: '2027-02-09', skor: 90, tautan: 'https://drive.google.com/file/d/t1-p1/view', catatan: 'Analisis sangat komprehensif' },
+              { pesertaId: 'P2', dikumpulkanPada: '2027-02-11', skor: 80, tautan: 'https://drive.google.com/file/d/t1-p2/view', catatan: 'Terkumpul tepat waktu' },
+              { pesertaId: 'P3', dikumpulkanPada: '2027-02-10', skor: 90, tautan: 'https://drive.google.com/file/d/t1-p3/view', catatan: 'Bagus' },
+              { pesertaId: 'P4', dikumpulkanPada: '2027-02-10', skor: 80, tautan: 'https://drive.google.com/file/d/t1-p4/view', catatan: 'Cukup lengkap' },
+              { pesertaId: 'P5', dikumpulkanPada: '2027-02-12', skor: null, tautan: 'https://drive.google.com/file/d/t1-p5/view', catatan: 'Menunggu review narasumber' }
             ]
           }
         ];
+
         pel.kepuasan = {
           fasilitator: [
-            { narasumber: 'dr. Narasumber A, Sp.An', jawaban: { penguasaan_materi: 5, ketepatan_waktu: 4, sistematika: 5, bahasa_suara: 5, motivasi: 4, tujuan_umum: 5, tanya_jawab: 5, kemampuan_menyajikan: 5 } },
-            { narasumber: 'dr. Narasumber A, Sp.An', jawaban: { penguasaan_materi: 5, ketepatan_waktu: 5, sistematika: 4, bahasa_suara: 4, motivasi: 5, tujuan_umum: 4, tanya_jawab: 5, kemampuan_menyajikan: 4 } },
-            { narasumber: 'Ns. Narasumber B, M.Kep', jawaban: { penguasaan_materi: 4, ketepatan_waktu: 5, sistematika: 5, bahasa_suara: 5, motivasi: 5, tujuan_umum: 5, tanya_jawab: 4, kemampuan_menyajikan: 5 } }
+            { narasumber: 'dr. H. Ahmad Fauzi, Sp.A', jawaban: { penguasaan_materi: 5, ketepatan_waktu: 5, sistematika: 5, bahasa_suara: 5, motivasi: 5, tujuan_umum: 5, tanya_jawab: 5, kemampuan_menyajikan: 5 } },
+            { narasumber: 'dr. H. Ahmad Fauzi, Sp.A', jawaban: { penguasaan_materi: 5, ketepatan_waktu: 4, sistematika: 5, bahasa_suara: 4, motivasi: 5, tujuan_umum: 5, tanya_jawab: 5, kemampuan_menyajikan: 5 } },
+            { narasumber: 'Ns. Siti Rahmawati, M.Kep, Sp.Kep.An', jawaban: { penguasaan_materi: 5, ketepatan_waktu: 5, sistematika: 5, bahasa_suara: 5, motivasi: 5, tujuan_umum: 5, tanya_jawab: 5, kemampuan_menyajikan: 5 } },
+            { narasumber: 'Ns. Siti Rahmawati, M.Kep, Sp.Kep.An', jawaban: { penguasaan_materi: 4, ketepatan_waktu: 5, sistematika: 4, bahasa_suara: 5, motivasi: 4, tujuan_umum: 5, tanya_jawab: 4, kemampuan_menyajikan: 5 } }
           ],
           penyelenggaraan: [
-            { jawaban: { materi: 5, narasumber: 5, praktik: 4, waktu: 4, platform: 5, panitia: 5, manfaat: 5 } },
-            { jawaban: { materi: 4, narasumber: 5, praktik: 5, waktu: 4, platform: 4, panitia: 5, manfaat: 5 } },
-            { jawaban: { materi: 4, narasumber: 4, praktik: 4, waktu: 3, platform: 4, panitia: 4, manfaat: 4 } }
+            { jawaban: { materi: 5, narasumber: 5, praktik: 5, waktu: 5, platform: 5, panitia: 5, manfaat: 5 }, saran: 'Pelatihan sangat bermanfaat dan instruktur sangat jelas.' },
+            { jawaban: { materi: 5, narasumber: 5, praktik: 4, waktu: 4, platform: 5, panitia: 5, manfaat: 5 }, saran: 'Sesi tanya jawab mohon diperbanyak.' },
+            { jawaban: { materi: 4, narasumber: 5, praktik: 5, waktu: 4, platform: 5, panitia: 4, manfaat: 5 }, saran: 'Panitia sangat responsif dalam memandu LMS Plataran Sehat.' },
+            { jawaban: { materi: 5, narasumber: 5, praktik: 5, waktu: 5, platform: 5, panitia: 5, manfaat: 5 }, saran: 'Luar biasa, materi langsung dapat diaplikasikan di rumah sakit.' }
           ]
         };
+
         pel.ringkasanLms = {
-          progres: { '0-<100': 2, '100': 6 },
-          rating: { '1': 0, '2': 0, '3': 0, '4': 2, '5': 5 },
-          jumlahUlasan: 7,
+          progres: { '0-<100': 1, '100': 7 },
+          rating: { '1': 0, '2': 0, '3': 0, '4': 2, '5': 6 },
+          jumlahUlasan: 8,
           nilaiPre: { min: 40, max: 65, rata: 52.5 },
-          nilaiPost: { min: 60, max: 90, rata: 75.6 }
+          nilaiPost: { min: 65, max: 95, rata: 78.4 }
         };
+
         pel.dokumentasi = [
-          { id: 'doc1', sesiId: null, kategori: 'foto', judul: 'Foto Pembukaan & Sesi Daring Hari 1', tautan: 'https://drive.google.com/drive/folders/contoh-foto-bdi', statusTautan: 'baik', catatan: 'Folder Shared Drive BDI' },
-          { id: 'doc2', sesiId: null, kategori: 'tangkapan_layar_lms', judul: 'Tangkapan Layar Rating & Ulasan Plataran Sehat', tautan: 'https://drive.google.com/file/d/contoh-rating/view', statusTautan: 'baik', catatan: 'Untuk bagian 5.4 laporan' }
+          { id: 'doc1', sesiId: null, kategori: 'foto', judul: 'Dokumentasi Foto Pembukaan & Sesi Daring', tautan: 'https://drive.google.com/drive/folders/bdi-foto-kegiatan', statusTautan: 'baik', catatan: 'Shared Drive BDI - Album Foto' },
+          { id: 'doc2', sesiId: null, kategori: 'tangkapan_layar_lms', judul: 'Tangkapan Layar Rating & Ulasan LMS Plataran Sehat Kemenkes', tautan: 'https://drive.google.com/file/d/bdi-rating-lms/view', statusTautan: 'baik', catatan: 'Lampiran 5.4 Laporan' },
+          { id: 'doc3', sesiId: null, kategori: 'daftar_hadir', judul: 'Rekap Presensi & Daftar Hadir Peserta Resmi', tautan: 'https://drive.google.com/file/d/bdi-daftar-hadir/view', statusTautan: 'baik', catatan: 'Lampiran Laporan BDI' }
         ];
-        savePelaksanaan(batchId, pel);
+
+        pel.laporan = {
+          latarBelakang: 'Peningkatan mutu layanan kesehatan di rumah sakit dan fasilitas pelayanan kesehatan memerlukan sumber daya manusia kesehatan yang memiliki kompetensi terstandar. Balai Diklat Indonesia (BDI) menyelenggarakan pelatihan ' + pName + ' untuk memastikan pemenuhan standar kompetensi profesi sesuai kurikulum Kemenkes RI.',
+          tujuanUmum: 'Meningkatkan pengetahuan, sikap, dan keterampilan teknis tenaga kesehatan dalam penyelenggaraan ' + pName + ' secara profesional, aman, dan bermutu.',
+          tujuanKhusus: '1. Memahami konsep etik dan legal.\n2. Mampu melakukan pengkajian dan tata laksana klinis.\n3. Mampu melakukan dokumentasi dan kolaborasi interprofesional.',
+          tanggalBriefing: '2027-01-10',
+          alatBantu: 'Platform Zoom Cloud Meetings, LMS Plataran Sehat Kemenkes, Simulator/Phantom Klinis, Modul Ajar dan Google Workspace.',
+          narasiTambahan: 'Kegiatan berjalan tertib dan lancar dengan partisipasi aktif seluruh peserta serta koordinasi yang solid antara panitia dan narasumber.',
+          terakhirSinkron: '2026-11-19T10:00:00'
+        };
+
+        state.pelaksanaan[batchId] = clone(pel);
+        save();
         return pel;
       }
 
@@ -4685,6 +4812,8 @@
         alert: '<path d="M10.3 3.8 1.8 18.5A1.5 1.5 0 0 0 3.1 21h17.8a1.5 1.5 0 0 0 1.3-2.5L13.7 3.8a1.5 1.5 0 0 0-2.6 0z"/><path d="M12 9v4M12 17h.01"/>',
         list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
         grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+        award: '<circle cx="12" cy="8" r="6"/><path d="M15.48 13.93 18 22l-6-3-6 3 2.52-8.07"/>',
+        clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
         arrow: '<path d="M5 12h14M13 5l7 7-7 7"/>'
       };
 
@@ -5056,9 +5185,10 @@
               '</div>' +
               '<div class="guide-steps">' +
               '<a class="gstep" href="#/batch"><span class="gstep-num">1</span><strong>Isi Tanggal Pasti</strong><span>Buka Batch 2027 lalu isi tanggal pasti pelatihan agar tenggat H-30 akurat.</span></a>' +
-              '<a class="gstep" href="#/periksa-kak"><span class="gstep-num">2</span><strong>Cek & Pantau KAK</strong><span>Gunakan Pemeriksa KAK sebelum unggah ke Kemenkes & pantau progres di Tracker KAK.</span></a>' +
+              '<a class="gstep" href="#/periksa-kak"><span class="gstep-num">2</span><strong>Cek &amp; Pantau KAK</strong><span>Gunakan Pemeriksa KAK sebelum unggah ke Kemenkes &amp; pantau progres di Tracker KAK.</span></a>' +
               '<a class="gstep" href="#/rab"><span class="gstep-num">3</span><strong>Pastikan Margin ≥ 40%</strong><span>Susun RAB 6 bagian dan cek peserta minimal di panel Cek Target.</span></a>' +
-              '<a class="gstep" href="#/batch/BTCLS-B1/pelaksanaan"><span class="gstep-num">4</span><strong>Pelaksanaan & Laporan</strong><span>Catat absensi JPL, materi H-1, nilai/kelulusan, impor Zoom/LMS, & susun Laporan BDI.</span></a>' +
+              '<a class="gstep" href="#/evaluasi"><span class="gstep-num">4</span><strong>Evaluasi &amp; Nilai</strong><span>Kelola nilai Pre/Post test, penugasan, kelulusan, dan evaluasi fasilitator.</span></a>' +
+              '<a class="gstep" href="#/materi"><span class="gstep-num">5</span><strong>Materi H-1 &amp; Laporan</strong><span>Pastikan kelengkapan materi H-1 Kemenkes, absensi JPL, &amp; laporan BDI.</span></a>' +
               '</div></section>';
           }
 
@@ -5079,7 +5209,9 @@
             '<p class="today-date">' + UI.fmtDate(ctx.today, 'long') + '</p>' +
             '<h2 class="today-lead">' + esc(lead) + '</h2></div>' +
             '<div class="quick-acts">' +
-            '<a class="btn btn-sm btn-primary" href="#/periksa-kak">' + UI.icon('shield') + ' Periksa KAK</a>' +
+            '<a class="btn btn-sm btn-primary" href="#/evaluasi">' + UI.icon('award') + ' Evaluasi &amp; Nilai</a>' +
+            '<a class="btn btn-sm" href="#/materi">' + UI.icon('file') + ' Materi H-1</a>' +
+            '<a class="btn btn-sm" href="#/periksa-kak">' + UI.icon('shield') + ' Periksa KAK</a>' +
             '<button type="button" class="btn btn-sm" data-new-rab>' + UI.icon('wallet') + ' Buat RAB</button>' +
             (prefs.hideGuide ? '<button type="button" class="btn btn-sm btn-ghost" data-toggle-guide>' + UI.icon('help') + ' Panduan</button>' : '') +
             '</div></div>' + riskBar(active) + '</section>';
@@ -5938,7 +6070,10 @@
       var ALASAN_LABEL = { kehadiran: 'Kehadiran < ambang', nilai: 'Nilai di bawah minimal', remedial_habis: 'Jatah remedial habis' };
 
       function subState(ctx, batchId) {
+        if (!ctx) ctx = window.App || {};
+        if (!ctx.ui) ctx.ui = {};
         if (!ctx.ui.pel) ctx.ui.pel = {};
+        if (!batchId) batchId = 'default';
         if (!ctx.ui.pel[batchId]) ctx.ui.pel[batchId] = { sub: 'absensi', lapDemoMismatch: false };
         return ctx.ui.pel[batchId];
       }
@@ -6055,7 +6190,8 @@
         var sesiIds = sesiJpl.map(function (s) { return s.id; });
         var start = b.eventStart || (b.plannedMonth + '-01');
         var evalMat = null;
-        try { evalMat = D.evaluasiMateri(start, sesiIds, pel.materi || [], ctx.today, Store.calendar()); } catch (e) { evalMat = null; }
+        var today = (ctx && ctx.today) || window.App.today;
+        try { evalMat = D.evaluasiMateri(start, sesiIds, pel.materi || [], today, Store.calendar()); } catch (e) { evalMat = null; }
 
         var html = '';
         if (evalMat) {
@@ -6429,7 +6565,20 @@
       // ---------------------------------------------------------------------------
       // Mount Event Listeners untuk Pelaksanaan, Berkas & Impor
 
-      function mountPelaksanaan(root, b, ctx, tab) {
+      function mountPelaksanaan(root, bOrCtx, maybeCtx, maybeTab) {
+        var b, ctx, tab;
+        if (bOrCtx && bOrCtx.today !== undefined && bOrCtx.refresh !== undefined) {
+          ctx = bOrCtx;
+          var bId = typeof maybeCtx === 'string' ? maybeCtx : (maybeCtx && maybeCtx.id ? maybeCtx.id : (ctx.params && ctx.params.batchId) || Store.prefs().lastBatchId);
+          b = Store.getBatch(bId) || Store.getBatches()[0];
+          tab = maybeTab;
+        } else {
+          b = typeof bOrCtx === 'string' ? Store.getBatch(bOrCtx) : bOrCtx;
+          ctx = maybeCtx;
+          tab = maybeTab;
+        }
+        if (!b) b = Store.getBatches()[0];
+        if (!ctx) ctx = window.App || {};
         var pel = Store.getPelaksanaan(b.id);
         var st = subState(ctx, b.id);
         var save = function () { Store.savePelaksanaan(b.id, pel); };
@@ -6839,8 +6988,215 @@
         }
       }
 
+      function resolveBatch(ctx) {
+        var id = (ctx.params && ctx.params.batchId) || Store.prefs().lastBatchId || 'BTCLS-B1';
+        var b = Store.getBatch(id);
+        if (!b) {
+          var all = Store.getBatches();
+          b = all[0];
+          id = b ? b.id : 'BTCLS-B1';
+        }
+        if (Store.prefs().lastBatchId !== id) {
+          Store.setPrefs({ lastBatchId: id });
+        }
+        return b;
+      }
+
+      function renderBatchBar(b, activeRoute) {
+        var all = Store.getBatches();
+        var row = UI.evaluateOne(window.App.today, b.id);
+        var ev = row ? row.ev : null;
+        var pel = Store.getPelaksanaan(b.id);
+        var nPeserta = pel.peserta ? pel.peserta.length : 0;
+        var nSesi = pel.sesi ? pel.sesi.length : 0;
+        var nMateri = pel.materi ? pel.materi.length : 0;
+
+        var opts = all.map(function (x) {
+          return '<option value="' + esc(x.id) + '"' + (x.id === b.id ? ' selected' : '') + '>' +
+            esc(x.label) + ' — ' + esc(x.programName) + ' (' + UI.fmtMonth(x.plannedMonth) + ')' +
+            '</option>';
+        }).join('');
+
+        return '<div class="batch-picker-bar">' +
+          '<div class="batch-picker-row">' +
+          '<div class="batch-picker-select-wrap">' +
+          '<label for="batch-bar-select"><strong>Pilih Batch Pelatihan:</strong></label>' +
+          '<select id="batch-bar-select" class="input-select batch-select" data-batch-bar-route="' + esc(activeRoute) + '">' + opts + '</select>' +
+          '</div>' +
+          '<div class="batch-picker-actions">' +
+          '<a href="#/batch/' + encodeURIComponent(b.id) + '" class="btn btn-sm btn-ghost">' + UI.icon('layers') + ' Detail Batch Lengkap</a>' +
+          '<button type="button" class="btn btn-sm btn-ghost" data-load-golden="' + esc(b.id) + '" title="Muat ulang seluruh data contoh golden">Muat Sampel Uji</button>' +
+          '</div>' +
+          '</div>' +
+          '<div class="batch-picker-pills">' +
+          '<span class="badge badge-info">' + esc(b.id) + '</span>' +
+          '<span class="badge badge-selesai">' + UI.scheduleText(b) + '</span>' +
+          '<span class="badge">' + esc(b.method || 'Blended') + ' · ' + esc(b.location || 'BDI') + '</span>' +
+          '<span class="badge ' + (nPeserta >= (b.quota || 15) ? 'badge-selesai' : 'badge-info') + '">' + nPeserta + ' Peserta</span>' +
+          '<span class="badge">' + nSesi + ' Sesi</span>' +
+          '<span class="badge">' + nMateri + ' Materi</span>' +
+          (ev ? UI.riskBadge(ev) : '') +
+          '</div>' +
+          '<div class="batch-picker-nav no-print">' +
+          '<a href="#/evaluasi/' + encodeURIComponent(b.id) + '" class="btn-subnav' + (activeRoute === 'evaluasi' ? ' active' : '') + '">' + UI.icon('award') + ' Evaluasi &amp; Nilai</a>' +
+          '<a href="#/materi/' + encodeURIComponent(b.id) + '" class="btn-subnav' + (activeRoute === 'materi' ? ' active' : '') + '">' + UI.icon('file') + ' Materi (H-1)</a>' +
+          '<a href="#/kehadiran/' + encodeURIComponent(b.id) + '" class="btn-subnav' + (activeRoute === 'kehadiran' ? ' active' : '') + '">' + UI.icon('users') + ' Kehadiran &amp; JPL</a>' +
+          '<a href="#/laporan/' + encodeURIComponent(b.id) + '" class="btn-subnav' + (activeRoute === 'laporan' ? ' active' : '') + '">' + UI.icon('clipboard') + ' Laporan Pelatihan</a>' +
+          '<a href="#/batch/' + encodeURIComponent(b.id) + '/berkas" class="btn-subnav">' + UI.icon('link') + ' Berkas Dokumentasi</a>' +
+          '<a href="#/batch/' + encodeURIComponent(b.id) + '/impor" class="btn-subnav">' + UI.icon('upload') + ' Impor Log</a>' +
+          '</div>' +
+          '</div>';
+      }
+
+      function mountBatchBar(root, ctx) {
+        var sel = root.querySelector('#batch-bar-select');
+        if (sel) {
+          sel.addEventListener('change', function () {
+            var nId = sel.value;
+            var route = sel.getAttribute('data-batch-bar-route') || 'evaluasi';
+            Store.setPrefs({ lastBatchId: nId });
+            ctx.go('#/' + route + '/' + encodeURIComponent(nId));
+          });
+        }
+        var lg = root.querySelector('[data-load-golden]');
+        if (lg) {
+          lg.addEventListener('click', function () {
+            var bId = lg.getAttribute('data-load-golden');
+            Store.loadGoldenSample(bId);
+            UI.toast('Data sampel uji (8 peserta, nilai, materi, kepuasan, laporan) berhasil dimuat!', 'ok');
+            ctx.refresh();
+          });
+        }
+      }
+
+      window.Pages.evaluasi = {
+        title: function (ctx) {
+          var b = resolveBatch(ctx);
+          return 'Evaluasi Pelatihan – ' + (b ? b.label : '');
+        },
+        render: function (ctx) {
+          var b = resolveBatch(ctx);
+          var pel = Store.getPelaksanaan(b.id);
+          var st = subState(ctx, b.id);
+          if (ctx.params && ctx.params.sub) st.sub = ctx.params.sub;
+          if (st.sub !== 'nilai' && st.sub !== 'kepuasan') st.sub = 'nilai';
+
+          var html = '<div class="page-head">' +
+            '<h2>Evaluasi Pelatihan &amp; Kelulusan</h2>' +
+            '<p class="page-desc">Pengelolaan penilaian hasil belajar peserta (Pre-Test, Post-Test, Penugasan, Ujian Praktik/OSCE), pembobotan komponen, penetapan kelulusan, evaluasi 8 aspek fasilitator, 7 aspek penyelenggaraan BDI, dan sinkronisasi rating LMS Plataran Sehat.</p>' +
+            '</div>';
+
+          html += renderBatchBar(b, 'evaluasi');
+
+          var nResponden = (pel.kepuasan && pel.kepuasan.fasilitator ? pel.kepuasan.fasilitator.length : 0) + (pel.kepuasan && pel.kepuasan.penyelenggaraan ? pel.kepuasan.penyelenggaraan.length : 0);
+          html += '<div class="subpills no-print" style="margin-top:14px">' +
+            '<button type="button" data-pel-sub="nilai" class="' + (st.sub === 'nilai' ? 'active' : '') + '">' + UI.icon('award') + ' 1. Hasil Belajar &amp; Kelulusan Peserta <span class="count">' + pel.komponen.length + ' Komponen</span></button>' +
+            '<button type="button" data-pel-sub="kepuasan" class="' + (st.sub === 'kepuasan' ? 'active' : '') + '">' + UI.icon('check') + ' 2. Evaluasi Fasilitator, Penyelenggara &amp; LMS <span class="count">' + nResponden + ' Responden</span></button>' +
+            '</div>';
+
+          if (st.sub === 'nilai') html += renderNilai(b, pel);
+          else html += renderKepuasan(b, pel);
+
+          return html;
+        },
+        mount: function (root, ctx) {
+          var b = resolveBatch(ctx);
+          mountBatchBar(root, ctx);
+          mountPelaksanaan(root, ctx, b.id);
+        }
+      };
+
+      window.Pages.materi = {
+        title: function (ctx) {
+          var b = resolveBatch(ctx);
+          return 'Materi & Kesiapan H-1 – ' + (b ? b.label : '');
+        },
+        render: function (ctx) {
+          var b = resolveBatch(ctx);
+          var pel = Store.getPelaksanaan(b.id);
+
+          var html = '<div class="page-head">' +
+            '<h2>Materi Pelatihan &amp; Kesiapan H-1 Kemenkes</h2>' +
+            '<p class="page-desc">Pemantauan kelengkapan bahan tayang slide, modul/panduan, video pembelajaran, informasi penyelenggaraan, dan instrumen evaluasi paling lambat H-1 sebelum pelaksanaan sesuai Surat Ditjen Nakes Kemenkes RI.</p>' +
+            '</div>';
+
+          html += renderBatchBar(b, 'materi');
+          html += renderMateri(b, pel, ctx);
+          return html;
+        },
+        mount: function (root, ctx) {
+          var b = resolveBatch(ctx);
+          mountBatchBar(root, ctx);
+          mountPelaksanaan(root, ctx, b.id);
+        }
+      };
+
+      window.Pages.kehadiran = {
+        title: function (ctx) {
+          var b = resolveBatch(ctx);
+          return 'Kehadiran Peserta & JPL – ' + (b ? b.label : '');
+        },
+        render: function (ctx) {
+          var b = resolveBatch(ctx);
+          var pel = Store.getPelaksanaan(b.id);
+
+          var html = '<div class="page-head">' +
+            '<h2>Kehadiran Peserta &amp; Sesi Jam Pelajaran (JPL)</h2>' +
+            '<p class="page-desc">Pencatatan absensi peserta per JPL (1 JPL = 45 menit) sinkronus &amp; asinkronus, sesi non-JPL (registrasi, pre-test, ishoma), serta pemantauan otomatis batas ambang kehadiran.</p>' +
+            '</div>';
+
+          html += renderBatchBar(b, 'kehadiran');
+          html += renderAbsensi(b, pel);
+          return html;
+        },
+        mount: function (root, ctx) {
+          var b = resolveBatch(ctx);
+          mountBatchBar(root, ctx);
+          mountPelaksanaan(root, ctx, b.id);
+        }
+      };
+
+      window.Pages.laporan = {
+        title: function (ctx) {
+          var b = resolveBatch(ctx);
+          return 'Laporan Pelatihan – ' + (b ? b.label : '');
+        },
+        render: function (ctx) {
+          var b = resolveBatch(ctx);
+          var pel = Store.getPelaksanaan(b.id);
+          var st = subState(ctx, b.id);
+
+          var html = '<div class="page-head">' +
+            '<h2>Laporan Pelatihan (Format Resmi BDI v1)</h2>' +
+            '<p class="page-desc">Penyusunan laporan akhir kegiatan pelatihan Balai Diklat Indonesia (BDI), validasi otomatis kepatuhan laporan aturan L01–L05, serta ekspor dokumen HTML/Word siap cetak.</p>' +
+            '</div>';
+
+          html += renderBatchBar(b, 'laporan');
+          html += renderLaporan(b, pel, st);
+          return html;
+        },
+        mount: function (root, ctx) {
+          var b = resolveBatch(ctx);
+          mountBatchBar(root, ctx);
+          mountPelaksanaan(root, ctx, b.id);
+        }
+      };
+
       window.PelaksanaanMod = {
         renderPelaksanaanTab: renderPelaksanaanTab,
+        renderMateriTab: function (b, ctx) { var pel = Store.getPelaksanaan(b.id); return renderMateri(b, pel, ctx); },
+        renderEvaluasiTab: function (b, ctx) {
+          var st = subState(ctx, b.id);
+          if (st.sub !== 'nilai' && st.sub !== 'kepuasan') st.sub = 'nilai';
+          var pel = Store.getPelaksanaan(b.id);
+          var nRes = (pel.kepuasan && pel.kepuasan.fasilitator ? pel.kepuasan.fasilitator.length : 0) + (pel.kepuasan && pel.kepuasan.penyelenggaraan ? pel.kepuasan.penyelenggaraan.length : 0);
+          return '<div class="subpills no-print">' +
+            '<button type="button" data-pel-sub="nilai" class="' + (st.sub === 'nilai' ? 'active' : '') + '">' + UI.icon('award') + ' Hasil Belajar &amp; Kelulusan (' + pel.komponen.length + ' Komponen)</button>' +
+            '<button type="button" data-pel-sub="kepuasan" class="' + (st.sub === 'kepuasan' ? 'active' : '') + '">' + UI.icon('check') + ' Evaluasi Fasilitator &amp; LMS (' + nRes + ' Responden)</button>' +
+            '</div>' + (st.sub === 'nilai' ? renderNilai(b, pel) : renderKepuasan(b, pel));
+        },
+        renderKehadiranTab: function (b) { var pel = Store.getPelaksanaan(b.id); return renderAbsensi(b, pel); },
+        renderLaporanTab: function (b, ctx) { var st = subState(ctx, b.id); var pel = Store.getPelaksanaan(b.id); return renderLaporan(b, pel, st); },
         renderBerkasTab: renderBerkasTab,
         renderImporTab: renderImporTab,
         mount: mountPelaksanaan
@@ -6864,9 +7220,12 @@
         ['jalur', 'Jalur KAK'],
         ['kak', 'KAK v3'],
         ['rab', 'RAB'],
-        ['pelaksanaan', 'Pelaksanaan'],
-        ['berkas', 'Berkas & Tautan'],
-        ['impor', 'Impor']
+        ['evaluasi', 'Evaluasi & Nilai'],
+        ['materi', 'Materi (H-1)'],
+        ['kehadiran', 'Kehadiran & JPL'],
+        ['laporan', 'Laporan BDI'],
+        ['berkas', 'Dokumentasi'],
+        ['impor', 'Impor Log']
       ];
 
       function stageSteps(b, ev) {
@@ -7129,7 +7488,11 @@
             '<div class="detail-status">' + (b.cancelled ? '<span class="badge badge-batal">Dibatalkan</span>' : ev ? UI.riskBadge(ev) + '<span class="detail-stage">' + esc(UI.STAGE_LABEL[ev.stage]) + '</span>' : '<span class="badge badge-terlambat">Error</span>') + '</div></header>';
 
           html += '<nav class="tabs" aria-label="Bagian detail batch">' + TABS.map(function (t) {
-            var extra = t[0] === 'berkas' && pel.dokumentasi.length ? ' <span class="count">' + pel.dokumentasi.length + '</span>' : (t[0] === 'pelaksanaan' && pel.peserta.length ? ' <span class="count">' + pel.peserta.length + '</span>' : '');
+            var extra = '';
+            if (t[0] === 'berkas' && pel.dokumentasi.length) extra = ' <span class="count">' + pel.dokumentasi.length + '</span>';
+            else if (t[0] === 'materi' && pel.materi.length) extra = ' <span class="count">' + pel.materi.length + '</span>';
+            else if (t[0] === 'evaluasi' && pel.komponen.length) extra = ' <span class="count">' + pel.komponen.length + '</span>';
+            else if (t[0] === 'kehadiran' && pel.peserta.length) extra = ' <span class="count">' + pel.peserta.length + '</span>';
             return '<a href="#/batch/' + encodeURIComponent(b.id) + (t[0] === 'ringkasan' ? '' : '/' + t[0]) + '"' + (t[0] === tab ? ' aria-current="page" class="active"' : '') + '>' + t[1] + extra + '</a>';
           }).join('') + '</nav>';
 
@@ -7137,6 +7500,10 @@
           else if (tab === 'jalur') html += jalur(b, row, ctx);
           else if (tab === 'kak') html += kak(b);
           else if (tab === 'rab') html += rabTab(b);
+          else if (tab === 'materi') html += window.PelaksanaanMod.renderMateriTab(b, ctx);
+          else if (tab === 'evaluasi') html += window.PelaksanaanMod.renderEvaluasiTab(b, ctx);
+          else if (tab === 'kehadiran') html += window.PelaksanaanMod.renderKehadiranTab(b);
+          else if (tab === 'laporan') html += window.PelaksanaanMod.renderLaporanTab(b, ctx);
           else if (tab === 'pelaksanaan') html += window.PelaksanaanMod.renderPelaksanaanTab(b, ctx);
           else if (tab === 'berkas') html += window.PelaksanaanMod.renderBerkasTab(b);
           else if (tab === 'impor') html += window.PelaksanaanMod.renderImporTab(b);
@@ -7229,8 +7596,8 @@
           var nr = root.querySelector('[data-new-rab]');
           if (nr) nr.addEventListener('click', function () { window.Pages.rab.createDialog(id); });
 
-          if (tab === 'pelaksanaan' || tab === 'berkas' || tab === 'impor') {
-            window.PelaksanaanMod.mount(root, b, ctx, tab);
+          if (tab === 'pelaksanaan' || tab === 'evaluasi' || tab === 'materi' || tab === 'kehadiran' || tab === 'laporan' || tab === 'berkas' || tab === 'impor') {
+            window.PelaksanaanMod.mount(root, ctx, b.id);
           }
         }
       };
@@ -8146,24 +8513,28 @@
 
       var NAV_GROUPS = [
         {
-          group: 'Utama',
+          group: 'Operasional',
           items: [
-            { path: '', label: 'Beranda (Hari Ini)', page: 'hariIni', icon: 'home' }
+            { path: '', label: 'Hari Ini', page: 'hariIni', icon: 'home' },
+            { path: 'batch', label: 'Batch 2027 (83)', page: 'batch', icon: 'layers' },
+            { path: 'kak', label: 'Tracker KAK', page: 'kak', icon: 'kanban' },
+            { path: 'periksa-kak', label: 'Pemeriksa KAK', page: 'periksaKak', icon: 'shield' }
           ]
         },
         {
-          group: 'Perencanaan & KAK',
+          group: 'Pelaksanaan Pelatihan',
           items: [
-            { path: 'batch', label: 'Batch 2027 (83)', page: 'batch', icon: 'layers' },
-            { path: 'kak', label: 'Tracker KAK', page: 'kak', icon: 'kanban' },
-            { path: 'periksa-kak', label: 'Pemeriksa KAK', page: 'periksaKak', icon: 'shield' },
-            { path: 'kalender', label: 'Kalender', page: 'kalender', icon: 'calendar' }
+            { path: 'evaluasi', label: 'Evaluasi & Nilai', page: 'evaluasi', icon: 'award' },
+            { path: 'materi', label: 'Materi & Kesiapan H-1', page: 'materi', icon: 'file' },
+            { path: 'kehadiran', label: 'Kehadiran & JPL', page: 'kehadiran', icon: 'users' },
+            { path: 'laporan', label: 'Laporan Pelatihan', page: 'laporan', icon: 'clipboard' }
           ]
         },
         {
           group: 'Keuangan & Sistem',
           items: [
-            { path: 'rab', label: 'RAB & Margin 40%', page: 'rab', icon: 'wallet' },
+            { path: 'kalender', label: 'Kalender 2027', page: 'kalender', icon: 'calendar' },
+            { path: 'rab', label: 'Kalkulator RAB', page: 'rab', icon: 'wallet' },
             { path: 'pengaturan', label: 'Pengaturan', page: 'pengaturan', icon: 'settings' }
           ]
         }
@@ -8213,10 +8584,14 @@
       function resolve(route) {
         var s = route.seg;
         if (s.length === 0) return { page: 'hariIni', params: {} };
-        if (s[0] === 'kak' && s.length === 1) return { page: 'kak', params: {} };
-        if (s[0] === 'periksa-kak') return { page: 'periksaKak', params: {} };
         if (s[0] === 'batch' && s.length === 1) return { page: 'batch', params: {} };
         if (s[0] === 'batch' && s.length >= 2) return { page: 'batchDetail', params: { id: s[1], tab: s[2] || 'ringkasan' } };
+        if (s[0] === 'kak' && s.length === 1) return { page: 'kak', params: {} };
+        if (s[0] === 'periksa-kak') return { page: 'periksaKak', params: {} };
+        if (s[0] === 'evaluasi') return { page: 'evaluasi', params: { batchId: s[1], sub: s[2] } };
+        if (s[0] === 'materi') return { page: 'materi', params: { batchId: s[1] } };
+        if (s[0] === 'kehadiran') return { page: 'kehadiran', params: { batchId: s[1] } };
+        if (s[0] === 'laporan') return { page: 'laporan', params: { batchId: s[1] } };
         if (s[0] === 'kalender') return { page: 'kalender', params: {} };
         if (s[0] === 'rab' && s.length === 1) return { page: 'rab', params: {} };
         if (s[0] === 'rab' && s.length >= 2) return { page: 'rabEdit', params: { id: s[1] } };
@@ -8364,6 +8739,10 @@
           { title: 'Batch 2027 (83 Batch)', sub: 'Tabel & kartu semua batch 2027', href: '#/batch' },
           { title: 'Tracker KAK', sub: 'Papan Kanban & daftar progres KAK', href: '#/kak' },
           { title: 'Pemeriksa KAK (K01–K06, V01–V02)', sub: 'Validasi KAK sebelum unggah ke Kemenkes', href: '#/periksa-kak' },
+          { title: 'Evaluasi & Nilai Pelatihan', sub: 'Pre/Post test, penugasan, ujian praktik, kelulusan, dan evaluasi fasilitator', href: '#/evaluasi' },
+          { title: 'Materi & Kesiapan H-1 Kemenkes', sub: 'Bahan tayang, modul, video, info penyelenggaraan, dan instrumen evaluasi', href: '#/materi' },
+          { title: 'Kehadiran Peserta & Sesi JPL', sub: 'Absensi per JPL, sesi non-JPL, dan ambang kelulusan kehadiran', href: '#/kehadiran' },
+          { title: 'Laporan Pelatihan (Format BDI v1)', sub: 'Pembuatan laporan akhir BDI dan validasi L01–L05', href: '#/laporan' },
           { title: 'Kalender 2026–2027', sub: 'Kalender bulanan & ekspor .ics', href: '#/kalender' },
           { title: 'RAB & Target Margin 40%', sub: 'Daftar RAB & kalkulator peserta minimal', href: '#/rab' },
           { title: 'Pengaturan & Cadangan Data', sub: 'Aturan hari kerja, lembaga, libur, JSON', href: '#/pengaturan' }
