@@ -3910,6 +3910,10 @@
       margin-bottom: 22px;
     }
 
+    .nt-modgrid-5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
     .nt-mod {
       display: flex;
       flex-direction: column;
@@ -3963,8 +3967,390 @@
       color: #14B8A6;
     }
 
-    @media (max-width: 1100px) {
-      .nt-modgrid {
+    /* ---------- To-Do List Kerjaan Tim ---------- */
+    .todo-add-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .todo-add-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .home-todo-quick {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .home-todo-quick input[type="text"] {
+      flex: 1 1 200px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      background: #F7FEFC;
+    }
+
+    .home-todo-quick select {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    .todo-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .todo-list-compact {
+      gap: 8px;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #F7FEFC;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      transition: border-color .15s, background .15s;
+    }
+
+    .todo-item:hover {
+      border-color: #14B8A6;
+      background: #FFFFFF;
+    }
+
+    .todo-item.is-urgent {
+      border-left: 4px solid #F59E0B;
+      background: #FFFDF7;
+    }
+
+    .todo-item.is-done {
+      opacity: .68;
+      background: #F8FAFC;
+    }
+
+    .todo-item.is-done .todo-title {
+      text-decoration: line-through;
+      color: #64748B;
+    }
+
+    .todo-check {
+      flex: none;
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+      border-radius: 50%;
+      border: 2px solid #14B8A6;
+      background: #FFFFFF;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: all .15s;
+    }
+
+    .todo-check:hover {
+      background: #CCFBF1;
+    }
+
+    .todo-item.is-done .todo-check {
+      background: #14B8A6;
+      border-color: #0D9488;
+    }
+
+    .todo-check .ico {
+      width: 14px;
+      height: 14px;
+      color: #FFFFFF;
+    }
+
+    .todo-body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .todo-top {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .todo-title {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .todo-note {
+      margin: 4px 0 0;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .todo-batch-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .todo-actions {
+      display: flex;
+      gap: 4px;
+      flex: none;
+    }
+
+    .icon-danger:hover {
+      color: #E11D48 !important;
+      background: #FFF1F2 !important;
+    }
+
+    .smart-todo-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .smart-todo-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px dashed #99F6E4;
+      background: #F0FDFA;
+    }
+
+    .smart-todo-acts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* ---------- Bar Kuota Mini & Keputusan Kegiatan (Jalan / Reschedule / Cancel) ---------- */
+    .qmini-wrap {
+      min-width: 110px;
+    }
+
+    .qmini-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .qmini-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: #E2E8F0;
+      overflow: hidden;
+      margin-top: 3px;
+    }
+
+    .qmini-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: #94A3B8;
+      transition: width .2s;
+    }
+
+    .qmini-ok {
+      background: linear-gradient(90deg, #10B981, #14B8A6);
+    }
+
+    .qmini-warn {
+      background: #F59E0B;
+    }
+
+    .qmini-low {
+      background: #FB7185;
+    }
+
+    .qmini-idle {
+      background: #CBD5E1;
+      width: 0%;
+    }
+
+    .q-quick-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: -4px;
+    }
+
+    .dec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .dec-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1.5px solid var(--line);
+      background: #FFFFFF;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .dec-card:hover {
+      border-color: #14B8A6;
+      background: #F0FDFA;
+    }
+
+    .dec-card input[type="radio"] {
+      margin-top: 3px;
+      accent-color: #0D9488;
+    }
+
+    .dec-card span {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .dec-card strong {
+      font-size: 13px;
+      color: var(--navy);
+    }
+
+    .dec-card small {
+      font-size: 11.5px;
+      color: var(--ink-3);
+      line-height: 1.3;
+    }
+
+    .dec-card:has(input:checked) {
+      border-color: #0D9488;
+      background: #ECFDF8;
+      box-shadow: 0 2px 8px rgba(13, 148, 136, .12);
+    }
+
+    .dec-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .dec-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 8px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #F7FEFC;
+      text-decoration: none;
+      color: var(--navy);
+      transition: transform .15s;
+    }
+
+    .dec-stat:hover {
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .dec-stat strong {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .dec-stat span {
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .dec-s-jalan {
+      background: #F0FDF4;
+      border-color: #BBF7D0;
+    }
+
+    .dec-s-reschedule {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
+
+    .dec-s-cancel {
+      background: #FFF1F2;
+      border-color: #FECDD3;
+    }
+
+    .dec-s-wait {
+      background: #F0FDFA;
+      border-color: #CCFBF1;
+    }
+
+    .dec-quick-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .btn-dec-jalan {
+      background: #DCFCE7 !important;
+      color: #166534 !important;
+      border-color: #86EFAC !important;
+    }
+
+    .btn-dec-jalan:hover {
+      background: #BBF7D0 !important;
+    }
+
+    .btn-dec-resch {
+      background: #FEF3C7 !important;
+      color: #92400E !important;
+      border-color: #FDE68A !important;
+    }
+
+    .btn-dec-resch:hover {
+      background: #FDE68A !important;
+    }
+
+    .btn-dec-cancel {
+      background: #FFF1F2 !important;
+      color: #E11D48 !important;
+      border-color: #FECDD3 !important;
+    }
+
+    .btn-dec-cancel:hover {
+      background: #FFE4E6 !important;
+    }
+
+    @media (max-width: 1150px) {
+
+      .nt-modgrid,
+      .nt-modgrid-5 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -3991,8 +4377,18 @@
         order: -1;
       }
 
-      .nt-modgrid {
+      .nt-modgrid,
+      .nt-modgrid-5 {
         grid-template-columns: 1fr 1fr;
+      }
+
+      .todo-add-bar,
+      .dec-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dec-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
   </style>
@@ -4872,6 +5268,31 @@
         };
       }
 
+      function defaultTodos() {
+        return [
+          { id: 'td-1', title: 'Cek kesiapan KAK BTCLS B1 & verifikasi aturan K01–K06', pic: 'koordinator', batchId: 'BTCLS-B1', due: '2026-12-01', priority: 'penting', done: false, note: 'Pastikan total JPL dan tanggal pengajuan Kemenkes sudah sinkron.' },
+          { id: 'td-2', title: 'Putuskan kelayakan jalan PICU & NICU B1 berdasarkan kuota minimal', pic: 'head', batchId: 'PICU_NICU-B1', due: '2026-12-05', priority: 'penting', done: false, note: 'Pendaftar sudah 16 peserta — konfirmasi status Kegiatan Jalan.' },
+          { id: 'td-3', title: 'Finalisasi bahan tayang & modul praktik H-5 sebelum unggah LMS', pic: 'koordinator', batchId: 'BTCLS-B1', due: '2026-12-10', priority: 'normal', done: false, note: 'Cek link Google Drive agar bisa dibuka tanpa akses terbatas.' },
+          { id: 'td-4', title: 'Dorong promosi B2B rumah sakit untuk Perioperatif Kamar Bedah B1 (9/15)', pic: 'marketing', batchId: 'PERIOP-B1', due: '2026-12-12', priority: 'penting', done: false, note: 'Masih perlu tambahan peserta atau pertimbangkan Reschedule.' },
+          { id: 'td-5', title: 'Hitung ulang RAB & peserta minimal target margin 40% PONEK B1', pic: 'admin', batchId: 'PONEK-B1', due: '2026-12-14', priority: 'normal', done: false, note: 'Samakan harga tier dan biaya konsumsi narasumber.' },
+          { id: 'td-6', title: 'Kumpulkan tautan evaluasi fasilitator & screenshot rating Plataran Sehat', pic: 'koordinator', batchId: 'ICU-B1', due: '2026-12-18', priority: 'santai', done: false, note: 'Untuk pelengkap Lampiran 5.4 laporan akhir BDI.' },
+          { id: 'td-7', title: 'Review & tanda tangan pimpinan KAK Laparoskopi B1', pic: 'head', batchId: 'LAPARO-B1', due: '2026-11-28', priority: 'normal', done: true, note: 'Sudah disetujui dan siap diunggah.' },
+          { id: 'td-8', title: 'Simpan cadangan database JSON bulan ini dari menu Pengaturan', pic: 'admin', batchId: '', due: '2026-11-30', priority: 'santai', done: true, note: 'Arsip rutin bulanan tim internal BDI.' }
+        ];
+      }
+
+      function defaultBatchExtras(seed) {
+        var preset = {
+          'BTCLS-B1': { pendaftar: 22, keputusan: 'jalan', catatan: 'Kuota terpenuhi — pelatihan berjalan sesuai jadwal.' },
+          'PICU_NICU-B1': { pendaftar: 16, keputusan: 'jalan', catatan: 'Kuota penuh 100%, narasumber & alat siap.' },
+          'LAPARO-B1': { pendaftar: 17, keputusan: 'jalan', catatan: 'Kuota tercapai.' },
+          'PONEK-B1': { pendaftar: 15, keputusan: 'jalan', catatan: 'Memenuhi kuota minimal.' },
+          'ICU-B1': { pendaftar: 12, keputusan: 'menunggu', catatan: 'Pantau pendaftar hingga gerbang H-30.' },
+          'PERIOP-B1': { pendaftar: 9, keputusan: 'reschedule', catatan: 'Menunggu tambahan peserta RS mitra; opsi geser jadwal.' }
+        };
+        return preset[seed.id] || { pendaftar: null, keputusan: 'menunggu', catatan: '' };
+      }
+
       function freshState() {
         return {
           version: 2,
@@ -4881,7 +5302,8 @@
           holidays: clone(SEED.holidays),
           rabs: SEED.rabExamples.map(exampleRab),
           pelaksanaan: {},
-          kakChecks: {}
+          kakChecks: {},
+          todos: defaultTodos()
         };
       }
 
@@ -4931,6 +5353,7 @@
         }
         if (!isObj(s.pelaksanaan)) s.pelaksanaan = {};
         if (!isObj(s.kakChecks)) s.kakChecks = {};
+        if (!Array.isArray(s.todos)) s.todos = defaultTodos();
         return s;
       }
 
@@ -4970,18 +5393,31 @@
       function mergedBatch(seed) {
         var o = state.batches[seed.id] || {};
         var p = programMap[seed.program];
+        var def = defaultBatchExtras(seed);
+        var quota = (o.quota !== undefined && o.quota !== null && Number(o.quota) > 0) ? Number(o.quota) : seed.quota;
+        var quotaMin = (o.quotaMin !== undefined && o.quotaMin !== null && Number(o.quotaMin) >= 0) ? Number(o.quotaMin) : Math.max(1, Math.ceil(quota * 0.6));
+        var pendaftar = (o.pendaftar === 0 || o.pendaftar) ? Number(o.pendaftar) : def.pendaftar;
+        var plannedMonth = (o.plannedMonth && /^\d{4}-\d{2}$/.test(o.plannedMonth)) ? o.plannedMonth : seed.plannedMonth;
+        var cancelled = o.cancelled !== undefined ? !!o.cancelled : (o.keputusan === 'cancel');
+        var keputusan = cancelled ? 'cancel' : (o.keputusan || def.keputusan);
         var b = {
           id: seed.id, program: seed.program, programName: p.name, short: p.short, seq: seed.seq,
           label: p.short + ' B' + seed.seq,
-          plannedMonth: seed.plannedMonth, quota: seed.quota, price: seed.price, tier: seed.tier, note: seed.note,
+          plannedMonth: plannedMonth, originalPlannedMonth: seed.plannedMonth,
+          quota: quota, quotaMin: quotaMin, pendaftar: pendaftar,
+          price: seed.price, tier: seed.tier, note: seed.note,
           eventStart: o.eventStart !== undefined ? (o.eventStart || null) : seed.eventStart,
           eventEnd: o.eventEnd || null,
           cakupan: o.cakupan || 'nasional',
           bentuk: o.bentuk || 'mandiri',
           mitra: o.mitra || '',
           skp: o.skp || '',
-          metode: o.metode || '', tempat: o.tempat || '', pendaftar: (o.pendaftar === 0 || o.pendaftar) ? o.pendaftar : null,
-          registrationNo: o.registrationNo || '', cancelled: !!o.cancelled
+          metode: o.metode || '', tempat: o.tempat || '',
+          registrationNo: o.registrationNo || '', cancelled: cancelled,
+          keputusan: keputusan,
+          rescheduleFrom: o.rescheduleFrom || null,
+          keputusanCatatan: o.keputusanCatatan !== undefined ? o.keputusanCatatan : (def.catatan || ''),
+          keputusanUpdatedAt: o.keputusanUpdatedAt || null
         };
         STAGE_FIELDS.forEach(function (f) { b[f] = o[f] || null; });
         return b;
@@ -4998,6 +5434,15 @@
         if (!getBatch(id)) throw new Error('Batch tidak ditemukan: ' + id);
         var o = state.batches[id] || {};
         Object.keys(patch).forEach(function (k) { o[k] = patch[k]; });
+        if (patch.keputusan === 'cancel') {
+          o.cancelled = true;
+        } else if (patch.keputusan && patch.cancelled === undefined) {
+          o.cancelled = false;
+        } else if (patch.cancelled === true && patch.keputusan === undefined) {
+          o.keputusan = 'cancel';
+        } else if (patch.cancelled === false && o.keputusan === 'cancel' && patch.keputusan === undefined) {
+          o.keputusan = 'menunggu';
+        }
         state.batches[id] = o;
         return save();
       }
@@ -5328,6 +5773,59 @@
       }
 
       // ---------------------------------------------------------------------------
+      // To-Do List Kerjaan Tim
+
+      function getTodos() { return clone(state.todos || []); }
+
+      function addTodo(data) {
+        if (!Array.isArray(state.todos)) state.todos = [];
+        var item = {
+          id: uid('td-'),
+          title: String((data && data.title) || '').trim(),
+          pic: (data && data.pic) || 'koordinator',
+          batchId: (data && data.batchId) || '',
+          due: (data && data.due) || '',
+          priority: (data && data.priority) || 'normal',
+          done: !!(data && data.done),
+          note: String((data && data.note) || '').trim(),
+          createdAt: new Date().toISOString()
+        };
+        state.todos.unshift(item);
+        save();
+        return clone(item);
+      }
+
+      function toggleTodo(id) {
+        var list = state.todos || [];
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].id === id) { list[i].done = !list[i].done; save(); return clone(list[i]); }
+        }
+        return null;
+      }
+
+      function updateTodo(id, patch) {
+        var list = state.todos || [];
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].id === id) {
+            Object.keys(patch).forEach(function (k) { list[i][k] = patch[k]; });
+            save();
+            return clone(list[i]);
+          }
+        }
+        return null;
+      }
+
+      function deleteTodo(id) {
+        state.todos = (state.todos || []).filter(function (t) { return t.id !== id; });
+        return save();
+      }
+
+      function resetTodos() {
+        state.todos = defaultTodos();
+        return save();
+      }
+
+      // ---------------------------------------------------------------------------
       // Pengaturan, Preferensi, Cadangan, Reset
 
       function settings() { return state.settings; }
@@ -5380,6 +5878,7 @@
         rabInput: rabInput, rabsForBatch: rabsForBatch,
         getPelaksanaan: getPelaksanaan, savePelaksanaan: savePelaksanaan, loadGoldenSample: loadGoldenSample,
         getKakCheck: getKakCheck, saveKakCheck: saveKakCheck, resetKakCheck: resetKakCheck, defaultKakCheck: defaultKakCheck,
+        getTodos: getTodos, addTodo: addTodo, toggleTodo: toggleTodo, updateTodo: updateTodo, deleteTodo: deleteTodo, resetTodos: resetTodos,
         settings: settings, setSettings: setSettings, defaultSettings: defaultSettings,
         prefs: prefs, setPrefs: setPrefs,
         exportJSON: exportJSON, importJSON: importJSON, reset: reset, clone: clone
@@ -5695,13 +6194,157 @@
         return { headers: headers, rows: body };
       }
 
+      var DECISION_LABEL = { jalan: 'Kegiatan Jalan', reschedule: 'Reschedule', cancel: 'Cancel / Batal', menunggu: 'Pantau Kuota' };
+      var PIC_LABEL = { koordinator: 'Koordinator', head: 'Head Learning', marketing: 'Marketing', admin: 'Admin / Keuangan' };
+
+      function decisionBadge(b) {
+        if (!b) return '';
+        var k = b.cancelled ? 'cancel' : (b.keputusan || 'menunggu');
+        if (k === 'jalan') return '<span class="badge badge-aman">🟢 Kegiatan Jalan</span>';
+        if (k === 'reschedule') return '<span class="badge badge-segera">🟠 Reschedule</span>';
+        if (k === 'cancel') return '<span class="badge badge-terlambat">🔴 Cancel / Batal</span>';
+        return '<span class="badge badge-info">⏳ Pantau Kuota</span>';
+      }
+
+      function quotaPill(b) {
+        if (!b) return '';
+        var q = Number(b.quota || 0);
+        var qMin = Number(b.quotaMin !== undefined ? b.quotaMin : Math.max(1, Math.ceil(q * 0.6)));
+        var p = (b.pendaftar !== null && b.pendaftar !== undefined) ? Number(b.pendaftar) : null;
+        var pctVal = (q > 0 && p !== null) ? Math.min(100, Math.round((p / q) * 100)) : 0;
+        var cls = p === null ? 'qmini-idle' : (p >= qMin ? 'qmini-ok' : (p > 0 ? 'qmini-warn' : 'qmini-low'));
+        var text = (p === null ? '0' : p) + ' / ' + q + ' (' + pctVal + '%)';
+        return '<div class="qmini-wrap" title="Pendaftar ' + (p === null ? 0 : p) + ' dari kuota ' + q + ' (Min jalan: ' + qMin + ')">' +
+          '<div class="qmini-top"><strong>' + text + '</strong> <span class="muted small">Min ' + qMin + '</span></div>' +
+          '<div class="qmini-bar"><div class="qmini-fill ' + cls + '" style="width:' + pctVal + '%"></div></div>' +
+          '</div>';
+      }
+
+      function openQuotaDecisionDialog(batchId, initialMode, onDone) {
+        var Store = window.Store;
+        var D = window.BDIDomain;
+        var b = Store.getBatch(batchId);
+        if (!b) return;
+        var curDec = initialMode || (b.cancelled ? 'cancel' : (b.keputusan || 'menunggu'));
+        var curP = (b.pendaftar !== null && b.pendaftar !== undefined) ? b.pendaftar : '';
+        var months = '';
+        for (var m = 1; m <= 12; m++) {
+          var mv = '2027-' + String(m).padStart(2, '0');
+          months += '<option value="' + mv + '"' + (b.plannedMonth === mv ? ' selected' : '') + '>' + fmtMonth(mv) + '</option>';
+        }
+        var body =
+          '<p class="dlg-lead">' + esc(b.label) + ' — ' + esc(b.programName) + '</p>' +
+          '<p class="small muted">Jadwal saat ini: <strong>' + scheduleText(b) + '</strong>' +
+          (b.rescheduleFrom ? ' · Sebelumnya: <strong>' + esc(b.rescheduleFrom) + '</strong>' : '') + '</p>' +
+          '<div class="form-grid">' +
+          '<label class="field"><span>Kuota Maksimal (Peserta)</span><input type="number" name="quota" min="1" max="1000" step="1" required value="' + esc(b.quota) + '"></label>' +
+          '<label class="field"><span>Kuota Minimal Jalan</span><input type="number" name="quotaMin" min="0" max="1000" step="1" required value="' + esc(b.quotaMin) + '"></label>' +
+          '<label class="field field-wide"><span>Pendaftar Saat Ini</span><input type="number" name="pendaftar" min="0" max="10000" step="1" placeholder="Isi jumlah peserta terdaftar" value="' + esc(curP) + '"></label>' +
+          '</div>' +
+          '<div class="q-quick-row">' +
+          '<span class="small muted">Tambah cepat pendaftar:</span>' +
+          '<button type="button" class="btn btn-xs" data-qp="1">+1 Peserta</button>' +
+          '<button type="button" class="btn btn-xs" data-qp="5">+5 Peserta</button>' +
+          '<button type="button" class="btn btn-xs" data-qp="full">Set Penuh (= Kuota)</button>' +
+          '</div>' +
+          '<fieldset class="fieldset"><legend>Keputusan Kegiatan</legend>' +
+          '<div class="dec-grid">' +
+          '<label class="dec-card dec-jalan"><input type="radio" name="keputusan" value="jalan"' + (curDec === 'jalan' ? ' checked' : '') + '><span><strong>🟢 Kegiatan Jalan</strong><small>Lanjut sesuai jadwal &amp; kuota</small></span></label>' +
+          '<label class="dec-card dec-reschedule"><input type="radio" name="keputusan" value="reschedule"' + (curDec === 'reschedule' ? ' checked' : '') + '><span><strong>🟠 Reschedule</strong><small>Jadwal ulang tanggal / bulan</small></span></label>' +
+          '<label class="dec-card dec-cancel"><input type="radio" name="keputusan" value="cancel"' + (curDec === 'cancel' ? ' checked' : '') + '><span><strong>🔴 Cancel / Batal</strong><small>Batalkan batch &amp; pengingat</small></span></label>' +
+          '<label class="dec-card dec-menunggu"><input type="radio" name="keputusan" value="menunggu"' + (curDec === 'menunggu' ? ' checked' : '') + '><span><strong>⏳ Pantau Kuota</strong><small>Menunggu kecukupan peserta</small></span></label>' +
+          '</div>' +
+          '</fieldset>' +
+          '<div id="dec-reschedule-box" class="notice notice-warn"' + (curDec === 'reschedule' ? '' : ' hidden') + '>' +
+          '<p style="margin-bottom:8px"><strong>Atur Jadwal Baru (Reschedule 2027)</strong></p>' +
+          '<div class="form-grid">' +
+          '<label class="field"><span>Bulan Rencana Baru</span><select name="newMonth">' + months + '</select></label>' +
+          '<label class="field"><span>Tanggal Pasti Baru (opsional)</span><input type="date" name="newEventStart" min="2027-01-01" max="2027-12-31" value="' + esc(b.eventStart || '') + '"></label>' +
+          '</div>' +
+          '<p class="small muted" style="margin-top:6px">Jadwal lama akan disimpan di riwayat, dan jalur mundur KAK H-30 otomatis dihitung ulang.</p>' +
+          '</div>' +
+          '<label class="field"><span>Catatan / Alasan Keputusan</span><input type="text" name="catatan" maxlength="240" placeholder="Mis. Kuota terpenuhi / Geser ke bulan depan karena RS mitra..." value="' + esc(b.keputusanCatatan || '') + '"></label>';
+
+        dialog({
+          title: 'Atur Kuota & Keputusan: ' + b.label,
+          body: body,
+          submitLabel: 'Simpan Perubahan',
+          onOpen: function (fm) {
+            var rBox = fm.querySelector('#dec-reschedule-box');
+            var sync = function () {
+              var v = fm.querySelector('input[name="keputusan"]:checked').value;
+              rBox.hidden = v !== 'reschedule';
+            };
+            fm.querySelectorAll('input[name="keputusan"]').forEach(function (r) { r.addEventListener('change', sync); });
+            fm.querySelectorAll('[data-qp]').forEach(function (btn) {
+              btn.addEventListener('click', function () {
+                var qVal = Number(fm.elements.quota.value) || b.quota;
+                var cur = Number(fm.elements.pendaftar.value) || 0;
+                var act = btn.getAttribute('data-qp');
+                fm.elements.pendaftar.value = act === 'full' ? qVal : (cur + Number(act));
+              });
+            });
+            fm.elements.newEventStart.addEventListener('change', function () {
+              if (fm.elements.newEventStart.value) {
+                fm.elements.newMonth.value = fm.elements.newEventStart.value.slice(0, 7);
+              }
+            });
+          },
+          onSubmit: function (fm) {
+            var q = Number(fm.elements.quota.value);
+            var qMin = Number(fm.elements.quotaMin.value);
+            var rawP = fm.elements.pendaftar.value.trim();
+            var pVal = rawP === '' ? null : Number(rawP);
+            if (!isFinite(q) || q < 1 || q > 1000) return 'Kuota maksimal harus antara 1 sampai 1.000.';
+            if (!isFinite(qMin) || qMin < 0 || qMin > q) return 'Kuota minimal tidak boleh negatif atau melebihi kuota maksimal (' + q + ').';
+            if (pVal !== null && (!isFinite(pVal) || pVal < 0 || pVal > 10000)) return 'Pendaftar harus antara 0 sampai 10.000.';
+
+            var kep = fm.querySelector('input[name="keputusan"]:checked').value;
+            var patch = {
+              quota: Math.floor(q),
+              quotaMin: Math.floor(qMin),
+              pendaftar: pVal === null ? null : Math.floor(pVal),
+              keputusan: kep,
+              cancelled: kep === 'cancel',
+              keputusanCatatan: fm.elements.catatan.value.trim(),
+              keputusanUpdatedAt: new Date().toISOString().slice(0, 10)
+            };
+            if (kep === 'reschedule') {
+              var nes = fm.elements.newEventStart.value;
+              var nm = fm.elements.newMonth.value;
+              if (nes && (!D.isISODate(nes) || nes < '2027-01-01' || nes > '2027-12-31')) {
+                return 'Tanggal baru harus berada di tahun 2027.';
+              }
+              var oldLabel = b.eventStart || fmtMonth(b.plannedMonth, true);
+              if (!b.rescheduleFrom || (nes && nes !== b.eventStart) || (nm && nm !== b.plannedMonth)) {
+                patch.rescheduleFrom = b.rescheduleFrom || oldLabel;
+              }
+              patch.eventStart = nes || null;
+              patch.plannedMonth = nes ? nes.slice(0, 7) : nm;
+            }
+            Store.updateBatch(batchId, patch);
+            var msgMap = {
+              jalan: 'Status ' + b.label + ' diatur: Kegiatan Jalan.',
+              reschedule: 'Jadwal ' + b.label + ' di-Reschedule.',
+              cancel: 'Batch ' + b.label + ' dibatalkan (Cancel).',
+              menunggu: 'Kuota & status ' + b.label + ' disimpan.'
+            };
+            toast(msgMap[kep] || 'Perubahan disimpan.', 'ok');
+            if (typeof onDone === 'function') onDone(patch);
+            else if (window.App && window.App.refresh) window.App.refresh();
+          }
+        });
+      }
+
       window.Pages = window.Pages || {};
 
       window.UI = {
         icon: icon, esc: esc, fmtDate: fmtDate, fmtMonth: fmtMonth, num: num, dec: dec, rupiah: rupiah, pct: pct, localToday: localToday,
         BULAN: BULAN, BULAN_PENDEK: BULAN_PENDEK, HARI: HARI,
         STAGE_LABEL: STAGE_LABEL, STAGE_ACTION: STAGE_ACTION, FIELD_LABEL: FIELD_LABEL, MS_LABEL: MS_LABEL, MS_BASIS: MS_BASIS, BASIS_LABEL: BASIS_LABEL,
-        RISK_LABEL: RISK_LABEL, msFormula: msFormula, milestoneDone: milestoneDone, riskKey: riskKey, hkText: hkText, riskBadge: riskBadge,
+        RISK_LABEL: RISK_LABEL, DECISION_LABEL: DECISION_LABEL, PIC_LABEL: PIC_LABEL,
+        msFormula: msFormula, milestoneDone: milestoneDone, riskKey: riskKey, hkText: hkText, riskBadge: riskBadge,
+        decisionBadge: decisionBadge, quotaPill: quotaPill, openQuotaDecisionDialog: openQuotaDecisionDialog,
         windowText: windowText, scheduleText: scheduleText, humanize: humanize,
         evaluateAll: evaluateAll, evaluateOne: evaluateOne, remindersToday: remindersToday,
         toast: toast, dialog: dialog, confirmDialog: confirmDialog, download: download, csvCell: csvCell, parseMoney: parseMoney,
@@ -5889,6 +6532,34 @@
         '<circle cx="294" cy="150" r="5" fill="#F59E0B"/>'
       );
 
+      // 9. To-Do List Kerjaan Tim BDI: Papan checklist, progress bar teal/oranye, sticky notes, perawat ramah
+      window.NT_IMG.todo = svgUri(
+        // Papan checklist utama
+        '<rect x="58" y="42" width="184" height="214" rx="20" fill="#FFFFFF" stroke="#99F6E4" stroke-width="3"/>' +
+        '<rect x="116" y="30" width="68" height="22" rx="11" fill="url(#tealGrad)"/>' +
+        '<circle cx="150" cy="41" r="4" fill="#FFFFFF"/>' +
+        // Bar progres kerjaan
+        '<rect x="78" y="68" width="144" height="10" rx="5" fill="#CCFBF1"/>' +
+        '<rect x="78" y="68" width="102" height="10" rx="5" fill="url(#orangeGrad)"/>' +
+        // 3 item checklist (2 centang selesai, 1 aktif oranye)
+        '<rect x="78" y="96" width="24" height="24" rx="7" fill="#CCFBF1"/><path d="M84 108 l4 4 8 -9" fill="none" stroke="#0D9488" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<rect x="112" y="102" width="106" height="7" rx="3.5" fill="#0F172A" opacity="0.8"/><rect x="112" y="114" width="68" height="5" rx="2.5" fill="#94A3B8"/>' +
+        '<rect x="78" y="138" width="24" height="24" rx="7" fill="#CCFBF1"/><path d="M84 150 l4 4 8 -9" fill="none" stroke="#0D9488" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<rect x="112" y="144" width="96" height="7" rx="3.5" fill="#0F172A" opacity="0.8"/><rect x="112" y="156" width="80" height="5" rx="2.5" fill="#94A3B8"/>' +
+        '<rect x="78" y="180" width="24" height="24" rx="7" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/><circle cx="90" cy="192" r="4" fill="#F59E0B"/>' +
+        '<rect x="112" y="186" width="108" height="7" rx="3.5" fill="#0F172A"/><rect x="112" y="198" width="64" height="5" rx="2.5" fill="#F59E0B"/>' +
+        // Sticky note oranye
+        '<rect x="258" y="62" width="92" height="72" rx="14" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2.5" transform="rotate(6 304 98)"/>' +
+        '<rect x="274" y="84" width="60" height="7" rx="3.5" fill="#B45309" transform="rotate(6 304 98)"/>' +
+        '<rect x="274" y="98" width="44" height="6" rx="3" fill="#D97706" opacity="0.7" transform="rotate(6 304 98)"/>' +
+        // Karakter perawat mini ramah
+        '<path d="M254 252 c0-26 22-46 50-46 s50 20 50 46 z" fill="url(#tealGrad)"/>' +
+        '<circle cx="304" cy="186" r="22" fill="#FDE68A"/>' +
+        '<path d="M282 182 c4-18 40-18 44 0 c-4-9-12-14-22-14 s-18 5-22 14 z" fill="#0F172A"/>' +
+        '<circle cx="297" cy="188" r="2.2" fill="#0F172A"/><circle cx="311" cy="188" r="2.2" fill="#0F172A"/>' +
+        '<path d="M298 195 q6 5 12 0" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round"/>'
+      );
+
       // Helper global Banner Nursetingle untuk semua halaman modul
       window.UI = window.UI || {};
       window.UI.ntBanner = function (eyebrow, titleHtml, desc, imgKey, extraHtml) {
@@ -5988,10 +6659,11 @@
             '<h2 class="nt-title">Kelola Pelatihan <span class="t">Lebih Tenang,</span> Rapi &amp; Tepat Waktu Bareng <span class="o">' + esc(lembaga) + '</span></h2>' +
             '<p class="nt-lead">Mulai dari tenggat KAK H-30, RAB margin 40%, materi H-1 Kemenkes, absensi per JPL, nilai &amp; kelulusan, sampai laporan akhir — semua dirangkum praktis di satu tempat.</p>' +
             '<div class="nt-actions">' +
-            '<a class="btn btn-primary" href="#/evaluasi">' + UI.icon('award') + ' Mulai dari Evaluasi &amp; Nilai</a>' +
-            '<a class="btn" href="#/batch">' + UI.icon('layers') + ' Lihat 83 Batch 2027</a>' +
+            '<a class="btn btn-primary" href="#/todo">' + UI.icon('check') + ' Buka To-Do List Kerjaan</a>' +
+            '<a class="btn" href="#/batch">' + UI.icon('layers') + ' Kuota &amp; 83 Batch 2027</a>' +
             '</div>' +
             '<div class="nt-chips">' +
+            '<a class="nt-chip" href="#/evaluasi">' + UI.icon('award') + ' Evaluasi &amp; Nilai</a>' +
             '<a class="nt-chip" href="#/kak">' + UI.icon('kanban') + ' Tracker KAK</a>' +
             '<a class="nt-chip" href="#/materi">' + UI.icon('file') + ' Materi H-1</a>' +
             '<a class="nt-chip" href="#/kehadiran">' + UI.icon('users') + ' Absensi JPL</a>' +
@@ -6000,7 +6672,7 @@
             (IMG.hero ? '<div class="nt-art"><img src="' + IMG.hero + '" alt="Ilustrasi perawat"></div>' : '') +
             '</section>';
 
-          // 0b. Kartu modul bergambar (Pelaksanaan + Perencanaan)
+          // 0b. Kartu modul bergambar (Pelaksanaan + Perencanaan & To-Do)
           html += '<h3 class="nt-section-title">Modul <span class="t">Pelaksanaan Pelatihan</span></h3><div class="nt-modgrid">' +
             [['evaluasi', 'Evaluasi & Nilai', 'Pre/post test, OSCE, kelulusan, evaluasi fasilitator'],
             ['materi', 'Materi & Kesiapan H-1', 'Slide, modul, video & instrumen evaluasi'],
@@ -6010,14 +6682,63 @@
                 '<div><strong>' + esc(m[1]) + '</strong><span>' + esc(m[2]) + '</span></div></a>';
             }).join('') + '</div>';
 
-          html += '<h3 class="nt-section-title">Perencanaan, <span class="t">KAK &amp; Anggaran</span></h3><div class="nt-modgrid">' +
-            [['batch', 'batch', 'Batch 2027 (83 Batch)', 'Katalog lengkap jadwal, kuota, harga & status batch'],
+          html += '<h3 class="nt-section-title">Kerjaan Tim, <span class="t">Kuota Batch &amp; Perencanaan</span></h3><div class="nt-modgrid nt-modgrid-5">' +
+            [['todo', 'todo', 'To-Do List Kerjaan', 'Daftar kerjaan tim harian & saran tugas otomatis'],
+            ['batch', 'batch', 'Batch & Kuota (83)', 'Atur kuota peserta + status Jalan / Reschedule / Cancel'],
             ['kak', 'kak', 'Tracker KAK', 'Papan Kanban & daftar progres pengajuan Kemenkes'],
             ['periksa-kak', 'periksa', 'Pemeriksa KAK', 'Uji konsistensi K01–K06 & V01–V02 pra-unggah'],
             ['rab', 'rab', 'Kalkulator RAB 40%', 'Hitung margin, peserta minimal impas & sensitivitas']].map(function (m) {
               return '<a class="nt-mod" href="#/' + m[0] + '">' + (IMG[m[1]] ? '<img src="' + IMG[m[1]] + '" alt="Ilustrasi ' + esc(m[2]) + '">' : '') +
                 '<div><strong>' + esc(m[2]) + '</strong><span>' + esc(m[3]) + '</span></div></a>';
             }).join('') + '</div>';
+
+          // 0c. Widget Langsung: To-Do List Kerjaan Tim & Keputusan Kuota (Jalan / Reschedule / Cancel)
+          var todos = Store.getTodos();
+          var openTodos = todos.filter(function (t) { return !t.done; });
+          var allBatches = all.map(function (r) { return r.batch; });
+          var cntJalan = allBatches.filter(function (b) { return !b.cancelled && b.keputusan === 'jalan'; }).length;
+          var cntResch = allBatches.filter(function (b) { return !b.cancelled && b.keputusan === 'reschedule'; }).length;
+          var cntCancel = allBatches.filter(function (b) { return b.cancelled || b.keputusan === 'cancel'; }).length;
+          var cntTunggu = allBatches.length - cntJalan - cntResch - cntCancel;
+          var focusBatches = allBatches.filter(function (b) { return b.pendaftar !== null || b.keputusan !== 'menunggu' || b.cancelled; }).slice(0, 5);
+          if (!focusBatches.length) focusBatches = allBatches.slice(0, 5);
+
+          html += '<div class="split">' +
+            '<section class="panel"><div class="panel-head"><h3 class="panel-title">✓ To-Do List Kerjaan Tim <span class="count">' + openTodos.length + ' belum selesai</span></h3>' +
+            '<a class="btn btn-xs btn-ghost" href="#/todo">Kelola semua →</a></div>' +
+            '<form id="home-todo-form" class="home-todo-quick">' +
+            '<input type="text" name="title" placeholder="Tambah kerjaan baru dengan cepat..." maxlength="160" required>' +
+            '<select name="pic" aria-label="PIC">' +
+            '<option value="koordinator">Koordinator</option><option value="head">Head</option><option value="marketing">Marketing</option><option value="admin">Admin</option>' +
+            '</select>' +
+            '<button type="submit" class="btn btn-sm btn-primary">+ Tambah</button>' +
+            '</form>' +
+            '<ul class="todo-list todo-list-compact">' +
+            (todos.slice(0, 5).map(function (t) {
+              return '<li class="todo-item' + (t.done ? ' is-done' : '') + '">' +
+                '<button type="button" class="todo-check" data-home-todo="' + esc(t.id) + '" aria-pressed="' + (t.done ? 'true' : 'false') + '">' + (t.done ? UI.icon('check') : '') + '</button>' +
+                '<div class="todo-body"><div class="todo-top"><span class="todo-title">' + esc(t.title) + '</span>' +
+                '<span class="badge">' + esc(UI.PIC_LABEL[t.pic] || t.pic) + '</span></div>' +
+                (t.batchId ? '<span class="small muted">' + esc(t.batchId) + (t.due ? ' · Tenggat ' + UI.fmtDate(t.due, 'short') : '') + '</span>' : '') +
+                '</div></li>';
+            }).join('') || '<li class="muted small" style="padding:8px">Belum ada kerjaan.</li>') +
+            '</ul></section>' +
+
+            '<section class="panel"><div class="panel-head"><h3 class="panel-title">Kuota &amp; Keputusan Kegiatan <span class="count">' + allBatches.length + ' batch</span></h3>' +
+            '<a class="btn btn-xs btn-ghost" href="#/batch">Semua kuota →</a></div>' +
+            '<div class="dec-stats">' +
+            '<a class="dec-stat dec-s-jalan" href="#/batch?keputusan=jalan"><strong>' + cntJalan + '</strong><span>🟢 Jalan</span></a>' +
+            '<a class="dec-stat dec-s-reschedule" href="#/batch?keputusan=reschedule"><strong>' + cntResch + '</strong><span>🟠 Reschedule</span></a>' +
+            '<a class="dec-stat dec-s-cancel" href="#/batch?keputusan=cancel"><strong>' + cntCancel + '</strong><span>🔴 Cancel</span></a>' +
+            '<a class="dec-stat dec-s-wait" href="#/batch?keputusan=menunggu"><strong>' + cntTunggu + '</strong><span>⏳ Pantau</span></a>' +
+            '</div>' +
+            '<div class="table-wrap"><table class="table table-compact"><thead><tr><th>Batch</th><th>Kuota</th><th>Keputusan</th><th class="right">Atur</th></tr></thead><tbody>' +
+            focusBatches.map(function (b) {
+              return '<tr><td><a href="#/batch/' + encodeURIComponent(b.id) + '" class="strong">' + esc(b.label) + '</a><div class="small muted">' + UI.scheduleText(b) + '</div></td>' +
+                '<td>' + UI.quotaPill(b) + '</td><td>' + UI.decisionBadge(b) + '</td>' +
+                '<td class="right"><button type="button" class="btn btn-xs" data-quota-btn="' + esc(b.id) + '">Ubah</button></td></tr>';
+            }).join('') +
+            '</tbody></table></div></section></div>';
 
           // 1. Panduan Alur Kerja (bisa ditutup agar tidak mengganggu kalau sudah hafal)
           if (!prefs.hideGuide) {
@@ -6145,10 +6866,378 @@
           });
           var nr = root.querySelector('[data-new-rab]');
           if (nr) nr.addEventListener('click', function () { window.Pages.rab.createDialog(null); });
+          var htf = root.querySelector('#home-todo-form');
+          if (htf) {
+            htf.addEventListener('submit', function (e) {
+              e.preventDefault();
+              var title = htf.elements.title.value.trim();
+              if (!title) return;
+              Store.addTodo({ title: title, pic: htf.elements.pic.value, due: ctx.today, priority: 'normal', done: false });
+              UI.toast('Kerjaan ditambahkan ke To-Do List.', 'ok');
+              ctx.refresh();
+            });
+          }
+          root.querySelectorAll('[data-home-todo]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var t = Store.toggleTodo(btn.getAttribute('data-home-todo'));
+              if (t) UI.toast(t.done ? 'Kerjaan selesai!' : 'Kerjaan dibuka lagi.', 'ok');
+              ctx.refresh();
+            });
+          });
+          root.querySelectorAll('[data-quota-btn]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              UI.openQuotaDecisionDialog(btn.getAttribute('data-quota-btn'), null, function () { ctx.refresh(); });
+            });
+          });
         }
       };
 
       window.Pages.hariIni.humanize = UI.humanize;
+    })();
+
+    ;
+    /* ==== page-todo.js ==== */
+    /* To-Do List Kerjaan Tim BDI: checklist tugas harian, filter peran/prioritas, plus rekomendasi tugas otomatis dari KAK & kuota batch. */
+    (function () {
+      'use strict';
+
+      var UI = window.UI;
+      var Store = window.Store;
+      var esc = UI.esc;
+
+      var PRIO_LABEL = { penting: 'Penting', normal: 'Normal', santai: 'Santai' };
+      var PRIO_ORDER = { penting: 0, normal: 1, santai: 2 };
+      var PRIO_CLS = { penting: 'badge-terlambat', normal: 'badge-info', santai: 'badge-selesai' };
+
+      function filters(ctx) {
+        if (!ctx.ui.todo) ctx.ui.todo = { status: '', pic: '', q: '' };
+        return ctx.ui.todo;
+      }
+
+      function batchOptions(selectedId) {
+        var html = '<option value="">Umum / Lintas Batch</option>';
+        Store.getBatches().forEach(function (b) {
+          html += '<option value="' + esc(b.id) + '"' + (selectedId === b.id ? ' selected' : '') + '>' + esc(b.label) + ' — ' + UI.fmtMonth(b.plannedMonth, true) + '</option>';
+        });
+        return html;
+      }
+
+      function collectSmartTasks(ctx, todos) {
+        var existingKey = {};
+        todos.forEach(function (t) {
+          if (!t.done && t.batchId) existingKey[t.batchId + '|' + t.title.slice(0, 18)] = true;
+        });
+        var list = [];
+        // 1. Pengingat KAK aktif
+        UI.remindersToday(ctx.today).slice(0, 4).forEach(function (r) {
+          var b = Store.getBatch(r.batchId);
+          if (!b || b.cancelled) return;
+          var pic = (r.to && r.to[0]) || 'koordinator';
+          var ms = UI.MS_LABEL[r.code] || r.code;
+          var title = (r.kind === 'terlambat' ? '[Terlambat] ' : '') + ms + ' — ' + b.label;
+          if (existingKey[b.id + '|' + title.slice(0, 18)]) return;
+          list.push({
+            kind: 'kak',
+            title: title,
+            pic: pic,
+            batchId: b.id,
+            due: r.due || ctx.today,
+            priority: r.kind === 'terlambat' ? 'penting' : 'normal',
+            note: 'Jatuh tempo tonggak KAK ' + UI.fmtDate(r.due, 'med') + ' (' + UI.hkText(r.workingDaysLeft) + ').'
+          });
+        });
+        // 2. Batch yang pendaftarnya belum memenuhi kuota minimal & masih pantau kuota
+        Store.getBatches().forEach(function (b) {
+          if (list.length >= 8) return;
+          if (b.cancelled || b.keputusan !== 'menunggu') return;
+          if (b.pendaftar !== null && b.pendaftar < b.quotaMin) {
+            var title = 'Putuskan Kegiatan (Jalan / Reschedule / Cancel) — ' + b.label;
+            if (existingKey[b.id + '|' + title.slice(0, 18)]) return;
+            list.push({
+              kind: 'kuota',
+              title: title,
+              pic: 'head',
+              batchId: b.id,
+              due: ctx.today,
+              priority: 'penting',
+              note: 'Pendaftar baru ' + b.pendaftar + ' dari kuota minimal ' + b.quotaMin + ' (target ' + b.quota + ').'
+            });
+          }
+        });
+        return list;
+      }
+
+      function renderTodoItem(t, today) {
+        var b = t.batchId ? Store.getBatch(t.batchId) : null;
+        var overdue = !t.done && t.due && t.due < today;
+        return '<li class="todo-item' + (t.done ? ' is-done' : '') + (t.priority === 'penting' && !t.done ? ' is-urgent' : '') + '">' +
+          '<button type="button" class="todo-check" data-todo-toggle="' + esc(t.id) + '" aria-pressed="' + (t.done ? 'true' : 'false') + '" title="' + (t.done ? 'Tandai belum selesai' : 'Tandai selesai') + '">' +
+          (t.done ? UI.icon('check') : '') +
+          '</button>' +
+          '<div class="todo-body">' +
+          '<div class="todo-top">' +
+          '<span class="todo-title">' + esc(t.title) + '</span>' +
+          '<span class="badge ' + (PRIO_CLS[t.priority] || 'badge-info') + '">' + esc(PRIO_LABEL[t.priority] || 'Normal') + '</span>' +
+          '<span class="badge">' + esc(UI.PIC_LABEL[t.pic] || t.pic) + '</span>' +
+          (t.due ? '<span class="small ' + (overdue ? 'num-bad' : 'muted') + '">' + (overdue ? 'Lewat tenggat · ' : 'Tenggat ') + UI.fmtDate(t.due, 'med') + '</span>' : '') +
+          '</div>' +
+          (t.note ? '<p class="todo-note">' + esc(t.note) + '</p>' : '') +
+          (b ? '<div class="todo-batch-row">' +
+            '<a class="badge badge-info" href="#/batch/' + encodeURIComponent(b.id) + '">' + esc(b.label) + ' · ' + UI.scheduleText(b) + '</a>' +
+            UI.decisionBadge(b) +
+            '<button type="button" class="btn btn-xs" data-quota-btn="' + esc(b.id) + '">Atur Kuota / Jalan / Reschedule</button>' +
+            '</div>' : '') +
+          '</div>' +
+          '<div class="todo-actions">' +
+          '<button type="button" class="icon-btn" data-todo-edit="' + esc(t.id) + '" title="Ubah tugas">Edit</button>' +
+          '<button type="button" class="icon-btn icon-danger" data-todo-del="' + esc(t.id) + '" title="Hapus tugas">Hapus</button>' +
+          '</div>' +
+          '</li>';
+      }
+
+      window.Pages.todo = {
+        title: 'To-Do List Kerjaan',
+        render: function (ctx) {
+          var f = filters(ctx);
+          var all = Store.getTodos();
+          var total = all.length;
+          var doneCount = all.filter(function (t) { return t.done; }).length;
+          var openCount = total - doneCount;
+          var urgentOpen = all.filter(function (t) { return !t.done && t.priority === 'penting'; }).length;
+          var pctDone = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+          var q = f.q.trim().toLowerCase();
+          var shown = all.filter(function (t) {
+            if (f.status === 'belum' && t.done) return false;
+            if (f.status === 'selesai' && !t.done) return false;
+            if (f.pic && t.pic !== f.pic) return false;
+            if (q && (t.title + ' ' + t.note + ' ' + t.batchId).toLowerCase().indexOf(q) === -1) return false;
+            return true;
+          }).sort(function (a, b) {
+            if (a.done !== b.done) return a.done ? 1 : -1;
+            var pa = PRIO_ORDER[a.priority] !== undefined ? PRIO_ORDER[a.priority] : 1;
+            var pb = PRIO_ORDER[b.priority] !== undefined ? PRIO_ORDER[b.priority] : 1;
+            if (pa !== pb) return pa - pb;
+            return (a.due || '9999') < (b.due || '9999') ? -1 : 1;
+          });
+
+          var html = UI.ntBanner
+            ? UI.ntBanner('Manajemen Tugas Harian Tim', 'To-Do List <span class="t">Kerjaan</span> &amp; Target <span class="o">Harian BDI</span>', 'Catat, bagi tugas per peran (Koordinator, Head Learning, Marketing, Admin), centang kerjaan yang selesai, dan pantau rekomendasi tugas otomatis dari sistem.', 'todo')
+            : '';
+
+          // KPI Summary
+          html += '<div class="kpi-grid">' +
+            '<div class="kpi kpi-blue"><span class="kpi-label">Total Daftar Kerjaan</span><span class="kpi-val">' + total + '</span><span class="kpi-sub">Tugas tercatat untuk tim BDI</span></div>' +
+            '<div class="kpi kpi-amber"><span class="kpi-label">Belum Selesai</span><span class="kpi-val">' + openCount + '</span><span class="kpi-sub">Masih menunggu dikerjakan</span></div>' +
+            '<div class="kpi kpi-red"><span class="kpi-label">Prioritas Penting</span><span class="kpi-val">' + urgentOpen + '</span><span class="kpi-sub">Perlu didahulukan segera</span></div>' +
+            '<div class="kpi kpi-green"><span class="kpi-label">Progres Selesai</span><span class="kpi-val">' + doneCount + '<span class="muted" style="font-size:16px">/' + total + ' (' + pctDone + '%)</span></span>' +
+            '<div class="qmini-bar" style="margin-top:6px"><div class="qmini-fill qmini-ok" style="width:' + pctDone + '%"></div></div></div>' +
+            '</div>';
+
+          // Quick Add Form
+          html += '<section class="panel"><div class="panel-head"><h3 class="panel-title">+ Tambah Kerjaan Baru</h3>' +
+            '<button type="button" class="btn btn-xs btn-ghost" data-todo-reset>Kembalikan Daftar Contoh</button></div>' +
+            '<form id="todo-add-form" class="todo-add-bar">' +
+            '<label class="field field-wide"><span>Judul Kerjaan / Tugas</span><input type="text" name="title" required maxlength="160" placeholder="Contoh: Hubungi RS Mitra konfirmasi peserta BTCLS B2..."></label>' +
+            '<label class="field"><span>PIC / Peran</span><select name="pic">' +
+            '<option value="koordinator">Koordinator</option><option value="head">Head Learning</option><option value="marketing">Marketing</option><option value="admin">Admin / Keuangan</option>' +
+            '</select></label>' +
+            '<label class="field"><span>Prioritas</span><select name="priority">' +
+            '<option value="penting">Penting</option><option value="normal" selected>Normal</option><option value="santai">Santai</option>' +
+            '</select></label>' +
+            '<label class="field"><span>Batch Terkait (Opsional)</span><select name="batchId">' + batchOptions('') + '</select></label>' +
+            '<label class="field"><span>Tenggat Tanggal</span><input type="date" name="due" value="' + esc(ctx.today) + '"></label>' +
+            '<label class="field field-wide"><span>Catatan Tambahan</span><input type="text" name="note" maxlength="240" placeholder="Rincian singkat atau tautan terkait (opsional)..."></label>' +
+            '<div class="todo-add-actions"><button type="submit" class="btn btn-primary">+ Tambah ke To-Do List</button></div>' +
+            '</form></section>';
+
+          // Main list + Smart Auto Tasks split
+          html += '<div class="split">';
+
+          html += '<section class="panel"><div class="panel-head"><h3 class="panel-title">Daftar Kerjaan Tim <span class="count">' + shown.length + '</span></h3></div>';
+          html += '<div class="chips" style="margin-bottom:10px">' +
+            [['', 'Semua (' + total + ')'], ['belum', 'Belum Selesai (' + openCount + ')'], ['selesai', 'Selesai (' + doneCount + ')']].map(function (c) {
+              return '<button type="button" class="chip-btn' + (f.status === c[0] ? ' active' : '') + '" data-tf-status="' + c[0] + '">' + c[1] + '</button>';
+            }).join('') +
+            '</div>';
+          html += '<div class="filters" style="margin-bottom:12px">' +
+            '<label class="field field-inline field-grow"><span>Cari kerjaan</span><input type="search" id="todo-q" value="' + esc(f.q) + '" placeholder="Ketik kata kunci kerjaan..."></label>' +
+            '<label class="field field-inline"><span>Filter PIC</span><select id="todo-pic">' +
+            [['', 'Semua Peran'], ['koordinator', 'Koordinator'], ['head', 'Head Learning'], ['marketing', 'Marketing'], ['admin', 'Admin / Keuangan']].map(function (o) {
+              return '<option value="' + o[0] + '"' + (f.pic === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+            }).join('') +
+            '</select></label>' +
+            '</div>';
+
+          if (!shown.length) {
+            html += '<div class="empty-inline"><p>Tidak ada kerjaan yang sesuai filter ini. Tambahkan kerjaan baru di atas atau ubah filter.</p></div>';
+          } else {
+            html += '<ul class="todo-list">' + shown.map(function (t) { return renderTodoItem(t, ctx.today); }).join('') + '</ul>';
+          }
+          html += '</section>';
+
+          // Smart auto tasks panel
+          var smart = collectSmartTasks(ctx, all);
+          html += '<section class="panel"><div class="panel-head"><h3 class="panel-title">Saran Tugas Otomatis <span class="count">' + smart.length + '</span></h3></div>' +
+            '<p class="panel-sub">Sistem membaca pengingat KAK yang jatuh tempo dan batch dengan kuota belum penuh untuk diusulkan menjadi To-Do tim.</p>';
+          if (!smart.length) {
+            html += '<div class="empty-inline"><p>Semua pengingat KAK &amp; pantauan kuota hari ini sudah tercatat atau beres.</p></div>';
+          } else {
+            html += '<ul class="smart-todo-list">' + smart.map(function (s, idx) {
+              return '<li class="smart-todo-item">' +
+                '<div>' +
+                '<div class="todo-top"><strong>' + esc(s.title) + '</strong> <span class="badge">' + esc(UI.PIC_LABEL[s.pic] || s.pic) + '</span></div>' +
+                '<p class="small muted">' + esc(s.note) + '</p>' +
+                '</div>' +
+                '<div class="smart-todo-acts">' +
+                '<button type="button" class="btn btn-xs btn-primary" data-smart-add="' + idx + '">+ Masuk ke To-Do</button>' +
+                (s.batchId ? '<button type="button" class="btn btn-xs" data-quota-btn="' + esc(s.batchId) + '">Atur Kuota / Jadwal</button>' : '') +
+                '</div>' +
+                '</li>';
+            }).join('') + '</ul>';
+          }
+          html += '</section>';
+
+          html += '</div>';
+          return html;
+        },
+        mount: function (root, ctx) {
+          var f = filters(ctx);
+          var all = Store.getTodos();
+          var smart = collectSmartTasks(ctx, all);
+
+          var addForm = root.querySelector('#todo-add-form');
+          if (addForm) {
+            addForm.addEventListener('submit', function (e) {
+              e.preventDefault();
+              var title = addForm.elements.title.value.trim();
+              if (!title) { UI.toast('Isi judul kerjaan terlebih dahulu.', 'error'); return; }
+              Store.addTodo({
+                title: title,
+                pic: addForm.elements.pic.value,
+                priority: addForm.elements.priority.value,
+                batchId: addForm.elements.batchId.value,
+                due: addForm.elements.due.value,
+                note: addForm.elements.note.value.trim(),
+                done: false
+              });
+              UI.toast('Kerjaan ditambahkan ke To-Do List.', 'ok');
+              ctx.refresh();
+            });
+          }
+
+          root.querySelectorAll('[data-tf-status]').forEach(function (btn) {
+            btn.addEventListener('click', function () { f.status = btn.getAttribute('data-tf-status'); ctx.refresh(); });
+          });
+
+          var picSel = root.querySelector('#todo-pic');
+          if (picSel) picSel.addEventListener('change', function () { f.pic = picSel.value; ctx.refresh(); });
+
+          var qInp = root.querySelector('#todo-q');
+          var tmr = null;
+          if (qInp) {
+            qInp.addEventListener('input', function () {
+              clearTimeout(tmr);
+              var v = qInp.value;
+              tmr = setTimeout(function () {
+                f.q = v; ctx.refresh();
+                var again = document.getElementById('todo-q');
+                if (again) { again.focus(); again.setSelectionRange(again.value.length, again.value.length); }
+              }, 180);
+            });
+          }
+
+          root.querySelectorAll('[data-todo-toggle]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var item = Store.toggleTodo(btn.getAttribute('data-todo-toggle'));
+              if (item) UI.toast(item.done ? 'Kerjaan ditandai selesai!' : 'Kerjaan dibuka kembali.', 'ok');
+              ctx.refresh();
+            });
+          });
+
+          root.querySelectorAll('[data-todo-del]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var id = btn.getAttribute('data-todo-del');
+              UI.confirmDialog('Hapus kerjaan ini?', 'Tugas akan dihapus dari daftar To-Do tim.', 'Hapus', function () {
+                Store.deleteTodo(id);
+                UI.toast('Kerjaan dihapus.');
+                ctx.refresh();
+              });
+            });
+          });
+
+          root.querySelectorAll('[data-todo-edit]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var id = btn.getAttribute('data-todo-edit');
+              var item = Store.getTodos().filter(function (x) { return x.id === id; })[0];
+              if (!item) return;
+              var body =
+                '<label class="field"><span>Judul Kerjaan</span><input type="text" name="title" required maxlength="160" value="' + esc(item.title) + '"></label>' +
+                '<div class="form-grid">' +
+                '<label class="field"><span>PIC / Peran</span><select name="pic">' +
+                [['koordinator', 'Koordinator'], ['head', 'Head Learning'], ['marketing', 'Marketing'], ['admin', 'Admin / Keuangan']].map(function (o) {
+                  return '<option value="' + o[0] + '"' + (item.pic === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+                }).join('') +
+                '</select></label>' +
+                '<label class="field"><span>Prioritas</span><select name="priority">' +
+                [['penting', 'Penting'], ['normal', 'Normal'], ['santai', 'Santai']].map(function (o) {
+                  return '<option value="' + o[0] + '"' + (item.priority === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+                }).join('') +
+                '</select></label>' +
+                '<label class="field"><span>Tenggat</span><input type="date" name="due" value="' + esc(item.due || '') + '"></label>' +
+                '<label class="field"><span>Batch Terkait</span><select name="batchId">' + batchOptions(item.batchId) + '</select></label>' +
+                '</div>' +
+                '<label class="field"><span>Catatan</span><input type="text" name="note" maxlength="240" value="' + esc(item.note || '') + '"></label>';
+              UI.dialog({
+                title: 'Ubah Kerjaan',
+                body: body,
+                submitLabel: 'Simpan Perubahan',
+                onSubmit: function (fm) {
+                  var title = fm.elements.title.value.trim();
+                  if (!title) return 'Judul kerjaan tidak boleh kosong.';
+                  Store.updateTodo(id, {
+                    title: title,
+                    pic: fm.elements.pic.value,
+                    priority: fm.elements.priority.value,
+                    due: fm.elements.due.value,
+                    batchId: fm.elements.batchId.value,
+                    note: fm.elements.note.value.trim()
+                  });
+                  UI.toast('Kerjaan diperbarui.', 'ok');
+                  ctx.refresh();
+                }
+              });
+            });
+          });
+
+          root.querySelectorAll('[data-smart-add]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var item = smart[Number(btn.getAttribute('data-smart-add'))];
+              if (!item) return;
+              Store.addTodo(item);
+              UI.toast('Saran tugas dimasukkan ke To-Do List.', 'ok');
+              ctx.refresh();
+            });
+          });
+
+          root.querySelectorAll('[data-quota-btn]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              UI.openQuotaDecisionDialog(btn.getAttribute('data-quota-btn'), null, function () { ctx.refresh(); });
+            });
+          });
+
+          var resetBtn = root.querySelector('[data-todo-reset]');
+          if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+              UI.confirmDialog('Kembalikan To-Do ke daftar contoh?', 'Daftar kerjaan akan dikembalikan ke 8 tugas awal tim BDI.', 'Kembalikan', function () {
+                Store.resetTodos();
+                UI.toast('Daftar To-Do dikembalikan ke contoh awal.', 'ok');
+                ctx.refresh();
+              }, false);
+            });
+          }
+        }
+      };
     })();
 
     ;
@@ -6334,15 +7423,19 @@
       var RISK_ORDER = { terlambat: 0, segera: 1, aman: 2, selesai: 3 };
 
       function filters(ctx) {
-        if (!ctx.ui.batch) ctx.ui.batch = { q: '', bulan: '', tier: '', tahap: '', risiko: '', tanggal: '', batal: false, sort: 'jadwal', dir: 1, appliedQs: '' };
+        if (!ctx.ui.batch) ctx.ui.batch = { q: '', bulan: '', tier: '', tahap: '', risiko: '', tanggal: '', keputusan: '', kuotaOk: false, batal: false, sort: 'jadwal', dir: 1, appliedQs: '' };
         var f = ctx.ui.batch;
         var qs = ctx.query.toString();
         if (qs && qs !== f.appliedQs) {
-          f.q = ''; f.bulan = ''; f.tier = ''; f.tahap = ''; f.risiko = ''; f.tanggal = '';
+          f.q = ''; f.bulan = ''; f.tier = ''; f.tahap = ''; f.risiko = ''; f.tanggal = ''; f.keputusan = ''; f.kuotaOk = false; f.batal = false;
           if (ctx.query.get('risiko')) f.risiko = ctx.query.get('risiko');
           if (ctx.query.get('tahap')) f.tahap = ctx.query.get('tahap');
           if (ctx.query.get('tanggal')) f.tanggal = ctx.query.get('tanggal');
           if (ctx.query.get('bulan')) f.bulan = ctx.query.get('bulan');
+          if (ctx.query.get('keputusan')) {
+            f.keputusan = ctx.query.get('keputusan');
+            if (f.keputusan === 'cancel') f.batal = true;
+          }
           f.appliedQs = qs;
         }
         if (!qs) f.appliedQs = '';
@@ -6363,8 +7456,15 @@
         var q = f.q.trim().toLowerCase();
         return rows.filter(function (r) {
           var b = r.batch;
-          if (!f.batal && b.cancelled) return false;
-          if (f.batal && !b.cancelled) return false;
+          var kep = b.cancelled ? 'cancel' : (b.keputusan || 'menunggu');
+          if (f.keputusan === 'cancel') {
+            if (kep !== 'cancel') return false;
+          } else {
+            if (!f.batal && b.cancelled) return false;
+            if (f.batal && !b.cancelled) return false;
+            if (f.keputusan && kep !== f.keputusan) return false;
+          }
+          if (f.kuotaOk && !(b.pendaftar !== null && b.pendaftar >= b.quotaMin)) return false;
           var month = b.eventStart ? b.eventStart.slice(0, 7) : b.plannedMonth;
           if (f.bulan && month !== f.bulan) return false;
           if (f.tier && b.tier !== f.tier) return false;
@@ -6443,29 +7543,33 @@
           var cancelled = all.filter(function (r) { return r.batch.cancelled; }).length;
 
           var nLate = activeAll.filter(function (r) { return UI.riskKey(r.ev) === 'terlambat'; }).length;
-          var nSoon = activeAll.filter(function (r) { return UI.riskKey(r.ev) === 'segera'; }).length;
-          var nEst = activeAll.filter(function (r) { return !r.batch.eventStart; }).length;
-          var nMahal = activeAll.filter(function (r) { return r.batch.tier === 'mahal'; }).length;
+          var nJalan = activeAll.filter(function (r) { return r.batch.keputusan === 'jalan'; }).length;
+          var nResch = activeAll.filter(function (r) { return r.batch.keputusan === 'reschedule'; }).length;
+          var nCancel = all.filter(function (r) { return r.batch.cancelled || r.batch.keputusan === 'cancel'; }).length;
+          var nKuota = activeAll.filter(function (r) { return r.batch.pendaftar !== null && r.batch.pendaftar >= r.batch.quotaMin; }).length;
 
           // Quick filter chips
-          var preset = (!f.risiko && !f.tanggal && !f.tier && !f.tahap && !f.batal) ? 'all'
-            : (f.risiko === 'terlambat') ? 'late'
-              : (f.risiko === 'segera') ? 'soon'
-                : (f.tanggal === 'perkiraan') ? 'est'
-                  : (f.tier === 'mahal') ? 'mahal' : '';
+          var preset = (!f.risiko && !f.tanggal && !f.tier && !f.tahap && !f.batal && !f.keputusan && !f.kuotaOk) ? 'all'
+            : (f.keputusan === 'jalan') ? 'jalan'
+              : (f.keputusan === 'reschedule') ? 'reschedule'
+                : (f.keputusan === 'cancel') ? 'cancel'
+                  : (f.kuotaOk) ? 'kuota'
+                    : (f.risiko === 'terlambat') ? 'late' : '';
 
-          var html = (UI.ntBanner ? UI.ntBanner('Katalog Pelatihan 2027', '83 Batch <span class="t">Pelatihan Keperawatan</span> &amp; Nakes <span class="o">2027</span>', 'Jelajahi jadwal, kuota, harga, tahap KAK, dan kesiapan pelaksanaan. Bisa dilihat dalam bentuk Tabel maupun Kartu Katalog.', 'batch') : '') +
+          var html = (UI.ntBanner ? UI.ntBanner('Katalog Pelatihan 2027', '83 Batch <span class="t">Pelatihan Keperawatan</span> &amp; Nakes <span class="o">2027</span>', 'Atur kuota per pelatihan, tentukan kegiatan Jalan / Reschedule / Cancel, dan pantau kesiapan KAK.', 'batch') : '') +
             '<div class="chips">' +
             '<button type="button" class="chip-btn' + (preset === 'all' ? ' active' : '') + '" data-preset="all">Semua Aktif <span class="count">' + activeAll.length + '</span></button>' +
-            '<button type="button" class="chip-btn' + (preset === 'late' ? ' active' : '') + '" data-preset="late">Terlambat <span class="count">' + nLate + '</span></button>' +
-            '<button type="button" class="chip-btn' + (preset === 'soon' ? ' active' : '') + '" data-preset="soon">Segera <span class="count">' + nSoon + '</span></button>' +
-            '<button type="button" class="chip-btn' + (preset === 'est' ? ' active' : '') + '" data-preset="est">Belum Tanggal Pasti <span class="count">' + nEst + '</span></button>' +
-            '<button type="button" class="chip-btn' + (preset === 'mahal' ? ' active' : '') + '" data-preset="mahal">Tier Mahal (≥10 jt) <span class="count">' + nMahal + '</span></button>' +
+            '<button type="button" class="chip-btn' + (preset === 'jalan' ? ' active' : '') + '" data-preset="jalan">🟢 Kegiatan Jalan <span class="count">' + nJalan + '</span></button>' +
+            '<button type="button" class="chip-btn' + (preset === 'reschedule' ? ' active' : '') + '" data-preset="reschedule">🟠 Reschedule <span class="count">' + nResch + '</span></button>' +
+            '<button type="button" class="chip-btn' + (preset === 'cancel' ? ' active' : '') + '" data-preset="cancel">🔴 Cancel / Batal <span class="count">' + nCancel + '</span></button>' +
+            '<button type="button" class="chip-btn' + (preset === 'kuota' ? ' active' : '') + '" data-preset="kuota">Kuota Terpenuhi <span class="count">' + nKuota + '</span></button>' +
+            '<button type="button" class="chip-btn' + (preset === 'late' ? ' active' : '') + '" data-preset="late">Terlambat KAK <span class="count">' + nLate + '</span></button>' +
             '</div>';
 
           html += '<form class="filters" role="search" onsubmit="return false">' +
             '<label class="field field-inline field-grow"><span>Cari</span><input type="search" name="q" value="' + esc(f.q) + '" placeholder="Program atau batch..."></label>' +
             '<label class="field field-inline"><span>Bulan</span>' + select('bulan', f.bulan, months) + '</label>' +
+            '<label class="field field-inline"><span>Keputusan</span>' + select('keputusan', f.keputusan, [['', 'Semua keputusan'], ['jalan', '🟢 Kegiatan Jalan'], ['reschedule', '🟠 Reschedule'], ['menunggu', '⏳ Pantau Kuota'], ['cancel', '🔴 Cancel / Batal']]) + '</label>' +
             '<label class="field field-inline"><span>Tier</span>' + select('tier', f.tier, [['', 'Semua tier'], ['standar', 'Standar'], ['mahal', 'Mahal (≥ Rp10 jt)']]) + '</label>' +
             '<label class="field field-inline"><span>Tahap KAK</span>' + select('tahap', f.tahap, stages) + '</label>' +
             '<label class="field field-inline"><span>Status</span>' + select('risiko', f.risiko, [['', 'Semua status'], ['terlambat', 'Terlambat'], ['segera', 'Segera'], ['aman', 'Aman'], ['selesai', 'Selesai']]) + '</label>' +
@@ -6483,7 +7587,7 @@
             '<button type="button" class="btn btn-sm" data-csv' + (rows.length ? '' : ' disabled') + '>Unduh CSV</button></div></div>';
 
           if (rows.length === 0) {
-            html += '<div class="empty"><h2>Tidak ada batch yang cocok</h2><p>Ubah atau reset filter untuk melihat batch lainnya.</p></div>';
+            html += '<div class="empty"><h2>Tidak ada batch yang cocok</h2><p>Ubah atau reset filter untuk melihat batch lainnya.</p><p style="margin-top:12px"><button type="button" class="btn btn-sm btn-primary" data-reset>Tampilkan Semua Batch</button></p></div>';
             return html;
           }
 
@@ -6496,24 +7600,26 @@
               var thumbKey = cardImgs[idx % cardImgs.length];
               var thumb = IMG[thumbKey] ? '<div class="nt-card-thumb"><img src="' + IMG[thumbKey] + '" alt=""><span class="nt-card-thumb-tag">' + (b.tier === 'mahal' ? 'Program Khusus' : 'Pelatihan BDI') + '</span></div>' : '';
               return '<article class="bcard">' + thumb + '<div class="bcard-head"><div><a class="bcard-title" href="' + link + '">' + esc(b.label) + '</a>' +
-                '<div class="small muted">' + esc(b.programName) + '</div></div>' + (ev && !b.cancelled ? UI.riskBadge(ev) : '') + '</div>' +
-                '<div class="bcard-meta"><span>' + UI.scheduleText(b) + '</span><span>' + UI.rupiah(b.price) + '</span><span>Kuota ' + b.quota + '</span>' +
-                (ev ? '<span>Tahap: <strong>' + esc(UI.STAGE_LABEL[ev.stage]) + '</strong></span><span>Jendela: ' + UI.windowText(ev) + '</span>' : '') +
+                '<div class="small muted">' + esc(b.programName) + '</div></div>' + UI.decisionBadge(b) + '</div>' +
+                '<div class="bcard-meta"><span>' + UI.scheduleText(b) + '</span><span>' + UI.rupiah(b.price) + '</span>' +
+                (b.rescheduleFrom ? '<span class="num-warn">Reschedule dari ' + esc(b.rescheduleFrom) + '</span>' : '') +
+                (ev ? '<span>Tahap: <strong>' + esc(UI.STAGE_LABEL[ev.stage]) + '</strong> · ' + (b.cancelled ? '' : UI.riskBadge(ev)) + '</span>' : '') +
                 (rm ? '<span>Margin RAB: <strong class="' + (rm.ok ? 'num-good' : 'num-bad') + '">' + UI.pct(rm.margin) + '</strong></span>' : '') +
                 '</div>' +
+                '<div style="margin:6px 0 10px">' + UI.quotaPill(b) + '</div>' +
                 '<div class="bcard-foot">' +
-                '<a class="btn btn-xs btn-primary" href="' + link + '">Detail</a>' +
+                '<button type="button" class="btn btn-xs btn-primary" data-quota-btn="' + esc(b.id) + '">Kuota / Jalan / Reschedule</button>' +
+                '<a class="btn btn-xs" href="' + link + '">Detail</a>' +
                 '<a class="btn btn-xs" href="' + link + '/evaluasi">Evaluasi</a>' +
                 '<a class="btn btn-xs" href="' + link + '/materi">Materi</a>' +
-                '<a class="btn btn-xs" href="' + link + '/rab">RAB</a>' +
                 '</div></article>';
             }).join('') + '</div>';
             return html;
           }
 
           html += '<section class="panel" style="padding:0;overflow:hidden"><div class="table-wrap"><table class="table table-batch"><thead><tr>' +
-            th('Batch', 'batch', f) + th('Jadwal', 'jadwal', f) + '<th scope="col">Tier</th>' +
-            '<th scope="col" class="num">Kuota</th><th scope="col" class="num">Pendaftar</th>' + th('Harga', 'harga', f, 'num') +
+            th('Batch', 'batch', f) + th('Jadwal', 'jadwal', f) + '<th scope="col">Keputusan</th>' +
+            '<th scope="col">Kuota &amp; Pendaftar</th>' + th('Harga', 'harga', f, 'num') +
             th('Tahap KAK', 'tahap', f) + th('Tenggat Berikutnya', 'tenggat', f) + th('Status', 'status', f) + th('Jendela', 'jendela', f, 'num') +
             '<th scope="col" class="num">Margin RAB</th><th scope="col">Pintasan</th></tr></thead><tbody>';
           html += rows.map(function (r) {
@@ -6521,10 +7627,9 @@
             var rm = rabMargin(b.id);
             var link = '#/batch/' + encodeURIComponent(b.id);
             var cells = '<td><a class="strong" href="' + link + '">' + esc(b.label) + '</a><div class="small muted clamp">' + esc(b.programName) + '</div></td>' +
-              '<td class="nowrap">' + UI.scheduleText(b) + '</td>' +
-              '<td>' + (b.tier === 'mahal' ? '<span class="badge badge-segera">Mahal</span>' : '<span class="muted">Standar</span>') + '</td>' +
-              '<td class="num">' + b.quota + '</td>' +
-              '<td class="num">' + (b.pendaftar === null ? '<span class="muted">–</span>' : b.pendaftar) + '</td>' +
+              '<td class="nowrap">' + UI.scheduleText(b) + (b.rescheduleFrom ? '<div class="small num-warn">Dari: ' + esc(b.rescheduleFrom) + '</div>' : '') + '</td>' +
+              '<td>' + UI.decisionBadge(b) + (b.keputusanCatatan ? '<div class="small muted clamp">' + esc(b.keputusanCatatan) + '</div>' : '') + '</td>' +
+              '<td>' + UI.quotaPill(b) + '</td>' +
               '<td class="num nowrap">' + UI.rupiah(b.price) + '</td>';
             if (!ev) {
               cells += '<td colspan="4"><span class="badge badge-terlambat">Error</span> <span class="small">' + esc(r.error) + '</span></td>';
@@ -6535,7 +7640,7 @@
                 '<td class="num nowrap">' + UI.windowText(ev) + '</td>';
             }
             cells += '<td class="num">' + (rm ? '<a href="#/rab/' + encodeURIComponent(rm.id) + '" class="' + (rm.ok ? 'num-good' : 'num-bad') + '">' + UI.pct(rm.margin) + '</a>' : '<span class="muted">–</span>') + '</td>';
-            cells += '<td class="nowrap"><a class="btn btn-xs" href="' + link + '/pelaksanaan">Pelaksanaan</a></td>';
+            cells += '<td class="nowrap"><div class="toolbar-actions" style="gap:4px;flex-wrap:nowrap"><button type="button" class="btn btn-xs btn-primary" data-quota-btn="' + esc(b.id) + '">Kuota &amp; Status</button><a class="btn btn-xs" href="' + link + '/evaluasi">Pelaksanaan</a></div></td>';
             return '<tr>' + cells + '</tr>';
           }).join('');
           html += '</tbody></table></div></section>';
@@ -6555,27 +7660,39 @@
               if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
             }, 220);
           });
-          ['bulan', 'tier', 'tahap', 'risiko', 'tanggal'].forEach(function (n) {
-            form.elements[n].addEventListener('change', function (e) { f[n] = e.target.value; ctx.refresh(); });
+          ['bulan', 'tier', 'tahap', 'risiko', 'tanggal', 'keputusan'].forEach(function (n) {
+            form.elements[n].addEventListener('change', function (e) {
+              f[n] = e.target.value;
+              if (n === 'keputusan') f.batal = (f.keputusan === 'cancel');
+              ctx.refresh();
+            });
           });
-          form.elements.batal.addEventListener('change', function (e) { f.batal = e.target.checked; ctx.refresh(); });
+          form.elements.batal.addEventListener('change', function (e) { f.batal = e.target.checked; if (!f.batal && f.keputusan === 'cancel') f.keputusan = ''; ctx.refresh(); });
           root.querySelectorAll('[data-view]').forEach(function (btn) {
             btn.addEventListener('click', function () { Store.setPrefs({ batchView: btn.getAttribute('data-view') }); ctx.refresh(); });
           });
           root.querySelectorAll('[data-preset]').forEach(function (btn) {
             btn.addEventListener('click', function () {
               var p = btn.getAttribute('data-preset');
-              f.risiko = ''; f.tanggal = ''; f.tier = ''; f.tahap = ''; f.batal = false;
+              f.risiko = ''; f.tanggal = ''; f.tier = ''; f.tahap = ''; f.keputusan = ''; f.kuotaOk = false; f.batal = false;
               if (p === 'late') f.risiko = 'terlambat';
-              else if (p === 'soon') f.risiko = 'segera';
-              else if (p === 'est') f.tanggal = 'perkiraan';
-              else if (p === 'mahal') f.tier = 'mahal';
+              else if (p === 'jalan') f.keputusan = 'jalan';
+              else if (p === 'reschedule') f.keputusan = 'reschedule';
+              else if (p === 'cancel') { f.keputusan = 'cancel'; f.batal = true; }
+              else if (p === 'kuota') f.kuotaOk = true;
               ctx.refresh();
             });
           });
-          root.querySelector('[data-reset]').addEventListener('click', function () {
-            f.q = ''; f.bulan = ''; f.tier = ''; f.tahap = ''; f.risiko = ''; f.tanggal = ''; f.batal = false;
-            if (ctx.query.toString()) { f.appliedQs = ''; ctx.go('#/batch'); } else ctx.refresh();
+          root.querySelectorAll('[data-reset]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              f.q = ''; f.bulan = ''; f.tier = ''; f.tahap = ''; f.risiko = ''; f.tanggal = ''; f.keputusan = ''; f.kuotaOk = false; f.batal = false;
+              if (ctx.query.toString()) { f.appliedQs = ''; ctx.go('#/batch'); } else ctx.refresh();
+            });
+          });
+          root.querySelectorAll('[data-quota-btn]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              UI.openQuotaDecisionDialog(btn.getAttribute('data-quota-btn'), null, function () { ctx.refresh(); });
+            });
           });
           var csv = root.querySelector('[data-csv]');
           if (csv) csv.addEventListener('click', function () {
@@ -8121,11 +9238,24 @@
         }
         var reg = b.pendaftar !== null ? b.pendaftar : 0;
         var pct = b.quota > 0 ? Math.min(100, Math.round((reg / b.quota) * 100)) : 0;
-        var cls = (minN && reg >= minN) ? 'ok' : (reg > 0 ? 'warn' : '');
+        var cls = (reg >= b.quotaMin && (!minN || reg >= minN)) ? 'ok' : (reg > 0 ? 'warn' : '');
         return '<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line-2)">' +
-          '<div style="display:flex;justify-content:space-between;font-size:13px"><strong>Pantau Kuota (Gerbang H-45/H-30/H-21)</strong><span><strong>' + reg + '</strong> / ' + b.quota + ' (' + pct + '%)</span></div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:8px;flex-wrap:wrap">' +
+          '<strong>Pantau Kuota &amp; Keputusan Kegiatan</strong>' + UI.decisionBadge(b) +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:6px">' +
+          '<span>Pendaftar: <strong>' + reg + '</strong> / ' + b.quota + ' (' + pct + '%) · Minimal jalan: <strong>' + b.quotaMin + '</strong></span>' +
+          '</div>' +
           '<div class="quota-bar"><div class="quota-fill ' + cls + '" style="width:' + pct + '%"></div></div>' +
-          '<p class="small muted">' + (minN !== null ? ('Peserta minimal RAB untuk target margin: <strong>' + minN + ' peserta</strong>. ' + (reg >= minN ? '<span class="num-good">Target peserta tercapai!</span>' : 'Kurang ' + (minN - reg) + ' peserta lagi.')) : 'Buat RAB di tab RAB untuk melihat peserta minimal target 40%.') + '</p></div>';
+          (b.rescheduleFrom ? '<p class="small num-warn">Pernah di-reschedule dari jadwal awal: <strong>' + esc(b.rescheduleFrom) + '</strong></p>' : '') +
+          (b.keputusanCatatan ? '<p class="small muted">Catatan keputusan: ' + esc(b.keputusanCatatan) + '</p>' : '') +
+          '<p class="small muted">' + (minN !== null ? ('Peserta minimal RAB untuk target margin: <strong>' + minN + ' peserta</strong>. ' + (reg >= minN ? '<span class="num-good">Target RAB tercapai!</span>' : 'Kurang ' + (minN - reg) + ' peserta lagi.')) : 'Buat RAB di tab RAB untuk melihat peserta minimal target 40%.') + '</p>' +
+          '<div class="dec-quick-btns">' +
+          '<button type="button" class="btn btn-xs btn-dec-jalan" data-quick-dec="jalan">🟢 Set Kegiatan Jalan</button>' +
+          '<button type="button" class="btn btn-xs btn-dec-resch" data-quick-dec="reschedule">🟠 Reschedule Jadwal</button>' +
+          '<button type="button" class="btn btn-xs btn-dec-cancel" data-quick-dec="cancel">🔴 Cancel Kegiatan</button>' +
+          '</div>' +
+          '</div>';
       }
 
       function ringkasan(b, row, ctx) {
@@ -8145,8 +9275,12 @@
         html += '<label class="field"><span>Mitra kerja sama (jika ada)</span><input type="text" name="mitra" maxlength="160" value="' + esc(b.mitra) + '" placeholder="Nama RS / organisasi mitra"></label>';
         html += '<label class="field"><span>Total SKP (opsional)</span><input type="text" name="skp" maxlength="40" value="' + esc(b.skp) + '" placeholder="Contoh: 12 SKP"></label>';
         html += '<label class="field field-wide"><span>Tempat atau link Zoom / meeting</span><input type="text" id="f-tempat" name="tempat" maxlength="300" value="' + esc(b.tempat) + '" placeholder="Nama tempat; untuk daring/blended cantumkan link Zoom"></label>';
+        html += '<label class="field"><span>Kuota maksimal pelatihan</span><input type="number" id="f-quota" name="quota" min="1" max="1000" step="1" inputmode="numeric" value="' + esc(b.quota) + '">' +
+          '<small class="hint">Batas maksimal peserta per batch.</small></label>';
+        html += '<label class="field"><span>Kuota minimal jalan</span><input type="number" id="f-quotaMin" name="quotaMin" min="0" max="1000" step="1" inputmode="numeric" value="' + esc(b.quotaMin) + '">' +
+          '<small class="hint">Ambang peserta agar pelatihan dapat jalan.</small></label>';
         html += '<label class="field"><span>Pendaftar saat ini</span><input type="number" id="f-pendaftar" name="pendaftar" min="0" max="10000" step="1" inputmode="numeric" value="' + (b.pendaftar === null ? '' : b.pendaftar) + '">' +
-          '<small class="hint">Kuota asumsi 2026: ' + b.quota + ' peserta.</small></label>';
+          '<small class="hint">Terdaftar: ' + (b.pendaftar === null ? 0 : b.pendaftar) + ' dari ' + b.quota + ' kuota.</small></label>';
         html += '<label class="check field-wide"><input type="checkbox" id="f-batal" name="cancelled"' + (b.cancelled ? ' checked' : '') + '> Batch dibatalkan (tidak dihitung dan tidak diingatkan)</label>';
         html += '<p class="form-status small muted field-wide" id="form-status" aria-live="polite"></p>';
         html += '</form>' + quotaGateBox(b) + '</section>';
@@ -8339,9 +9473,11 @@
 
           var html = '<p class="crumbs"><a href="#/batch">Batch 2027</a> <span>/</span> <span>' + esc(b.label) + '</span></p>';
           html += '<header class="detail-head"><div><h2 class="detail-title">' + esc(b.programName) + '</h2>' +
-            '<p class="detail-meta"><span><strong>Angkatan ' + b.seq + '</strong></span><span>' + UI.scheduleText(b) + '</span><span>' + (b.tier === 'mahal' ? 'Tier Mahal' : 'Tier Standar') + '</span><span>' + UI.rupiah(b.price) + '/peserta</span><span>Kuota ' + b.quota + '</span></p>' +
+            '<p class="detail-meta"><span><strong>Angkatan ' + b.seq + '</strong></span><span>' + UI.scheduleText(b) + '</span><span>' + (b.tier === 'mahal' ? 'Tier Mahal' : 'Tier Standar') + '</span><span>' + UI.rupiah(b.price) + '/peserta</span><span>Kuota ' + b.quota + ' (Min ' + b.quotaMin + ')</span></p>' +
+            (b.rescheduleFrom ? '<p class="small num-warn" style="margin-top:4px">Dijadwalkan ulang (Reschedule) dari: ' + esc(b.rescheduleFrom) + '</p>' : '') +
             (b.note ? '<p class="small num-warn" style="margin-top:6px">Catatan data: ' + esc(b.note) + '</p>' : '') + '</div>' +
-            '<div class="detail-status">' + (b.cancelled ? '<span class="badge badge-batal">Dibatalkan</span>' : ev ? UI.riskBadge(ev) + '<span class="detail-stage">' + esc(UI.STAGE_LABEL[ev.stage]) + '</span>' : '<span class="badge badge-terlambat">Error</span>') + '</div></header>';
+            '<div class="detail-status">' + UI.decisionBadge(b) + ' ' + (b.cancelled ? '' : (ev ? UI.riskBadge(ev) + '<span class="detail-stage">' + esc(UI.STAGE_LABEL[ev.stage]) + '</span>' : '<span class="badge badge-terlambat">Error</span>')) +
+            '<button type="button" class="btn btn-xs btn-primary" data-open-quota-dlg>Atur Kuota &amp; Keputusan</button></div></header>';
 
           html += '<nav class="tabs" aria-label="Bagian detail batch">' + TABS.map(function (t) {
             var extra = '';
@@ -8389,6 +9525,14 @@
                 if (v && (!D.isISODate(v) || v < '2027-01-01' || v > '2027-12-31')) { status.textContent = 'Tanggal pasti harus di tahun 2027.'; status.className = 'form-status small num-bad field-wide'; return; }
                 Store.updateBatch(id, { eventStart: v || null });
                 saved(v ? 'Tanggal pasti disimpan. Semua tenggat dihitung ulang.' : 'Tanggal pasti dikosongkan; memakai perkiraan tanggal 1.');
+              } else if (name === 'quota') {
+                var qn = Number(t.value);
+                if (!isFinite(qn) || qn < 1 || Math.floor(qn) !== qn || qn > 1000) { status.textContent = 'Kuota maksimal harus 1 sampai 1.000.'; status.className = 'form-status small num-bad field-wide'; return; }
+                Store.updateBatch(id, { quota: qn }); saved('Kuota pelatihan disimpan.');
+              } else if (name === 'quotaMin') {
+                var qmn = Number(t.value);
+                if (!isFinite(qmn) || qmn < 0 || Math.floor(qmn) !== qmn || qmn > 1000) { status.textContent = 'Kuota minimal harus 0 sampai 1.000.'; status.className = 'form-status small num-bad field-wide'; return; }
+                Store.updateBatch(id, { quotaMin: qmn }); saved('Kuota minimal disimpan.');
               } else if (name === 'pendaftar') {
                 var raw = t.value.trim();
                 if (raw === '') { Store.updateBatch(id, { pendaftar: null }); saved('Tersimpan.'); return; }
@@ -8402,6 +9546,22 @@
               }
             });
           }
+
+          var oqd = root.querySelector('[data-open-quota-dlg]');
+          if (oqd) oqd.addEventListener('click', function () { UI.openQuotaDecisionDialog(id, null, function () { ctx.refresh(); }); });
+
+          root.querySelectorAll('[data-quick-dec]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var mode = btn.getAttribute('data-quick-dec');
+              if (mode === 'jalan') {
+                Store.updateBatch(id, { keputusan: 'jalan', cancelled: false, keputusanUpdatedAt: ctx.today });
+                UI.toast('Status ' + b.label + ' diubah ke Kegiatan Jalan!', 'ok');
+                ctx.refresh();
+              } else {
+                UI.openQuotaDecisionDialog(id, mode, function () { ctx.refresh(); });
+              }
+            });
+          });
 
           var adv = root.querySelector('[data-advance]');
           if (adv) adv.addEventListener('click', function () { App.advanceStage(id); });
@@ -9374,6 +10534,7 @@
           group: 'Operasional',
           items: [
             { path: '', label: 'Hari Ini', page: 'hariIni', icon: 'home' },
+            { path: 'todo', label: 'To-Do List Kerjaan', page: 'todo', icon: 'check', badge: 'BARU' },
             { path: 'batch', label: 'Batch 2027 (83)', page: 'batch', icon: 'layers', badge: 'UTAMA' },
             { path: 'kak', label: 'Tracker KAK', page: 'kak', icon: 'kanban' },
             { path: 'periksa-kak', label: 'Pemeriksa KAK', page: 'periksaKak', icon: 'shield' }
@@ -9442,6 +10603,7 @@
       function resolve(route) {
         var s = route.seg;
         if (s.length === 0) return { page: 'hariIni', params: {} };
+        if (s[0] === 'todo') return { page: 'todo', params: {} };
         if (s[0] === 'batch' && s.length === 1) return { page: 'batch', params: {} };
         if (s[0] === 'batch' && s.length >= 2) return { page: 'batchDetail', params: { id: s[1], tab: s[2] || 'ringkasan' } };
         if (s[0] === 'kak' && s.length === 1) return { page: 'kak', params: {} };
@@ -9466,11 +10628,14 @@
       function renderNav(activePage) {
         var key = navKeyFor(activePage);
         var reminders = UI.remindersToday(App.today).length;
+        var openTodos = Store.getTodos().filter(function (t) { return !t.done; }).length;
         var html = NAV_GROUPS.map(function (g) {
           return '<div class="nav-group"><p class="nav-group-label">' + esc(g.group) + '</p><ul class="nav">' +
             g.items.map(function (n) {
               var active = n.page === key;
-              var count = n.page === 'hariIni' && reminders > 0 ? '<span class="nav-count" aria-label="' + reminders + ' pengingat">' + reminders + '</span>' : '';
+              var count = '';
+              if (n.page === 'hariIni' && reminders > 0) count = '<span class="nav-count" aria-label="' + reminders + ' pengingat">' + reminders + '</span>';
+              else if (n.page === 'todo' && openTodos > 0) count = '<span class="nav-count" aria-label="' + openTodos + ' tugas">' + openTodos + '</span>';
               var utm = n.badge ? '<span class="nt-badge-utama">' + esc(n.badge) + '</span>' : '';
               return '<li><a href="#/' + n.path + '" title="' + esc(n.label) + '"' + (active ? ' aria-current="page" class="active"' : '') + '>' +
                 UI.icon(n.icon) + '<span class="nav-label">' + esc(n.label) + '</span>' + utm + count + '</a></li>';
@@ -9595,7 +10760,8 @@
         var rabs = Store.rabs();
         var pages = [
           { title: 'Beranda (Hari Ini)', sub: 'Halaman utama, KPI & pengingat', href: '#/' },
-          { title: 'Batch 2027 (83 Batch)', sub: 'Tabel & kartu semua batch 2027', href: '#/batch' },
+          { title: 'To-Do List Kerjaan Tim BDI', sub: 'Checklist kerjaan tim harian & saran tugas otomatis', href: '#/todo' },
+          { title: 'Batch 2027 (83 Batch)', sub: 'Tabel & kartu semua batch, kuota, status Jalan/Reschedule/Cancel', href: '#/batch' },
           { title: 'Tracker KAK', sub: 'Papan Kanban & daftar progres KAK', href: '#/kak' },
           { title: 'Pemeriksa KAK (K01–K06, V01–V02)', sub: 'Validasi KAK sebelum unggah ke Kemenkes', href: '#/periksa-kak' },
           { title: 'Evaluasi & Nilai Pelatihan', sub: 'Pre/Post test, penugasan, ujian praktik, kelulusan, dan evaluasi fasilitator', href: '#/evaluasi' },
