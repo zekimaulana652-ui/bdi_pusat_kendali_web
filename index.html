@@ -5147,8 +5147,15 @@
 
     @media print {
       @page {
-        size: A4;
-        margin: 14mm;
+        size: A4 portrait;
+        margin: 8mm 11mm;
+      }
+
+      html,
+      body {
+        background: #fff !important;
+        font-size: 10.6px !important;
+        line-height: 1.32 !important;
       }
 
       .sidebar,
@@ -5170,6 +5177,7 @@
 
       .main {
         padding: 0 !important;
+        margin: 0 !important;
         max-width: 100% !important;
       }
 
@@ -5177,6 +5185,76 @@
         border: 0 !important;
         box-shadow: none !important;
         padding: 0 !important;
+        margin: 0 !important;
+        break-inside: auto !important;
+      }
+
+      #report-preview .report-kop {
+        padding-bottom: 6px !important;
+        margin-bottom: 8px !important;
+        border-bottom-width: 1.5px !important;
+      }
+
+      #report-preview .report-kop h2 {
+        font-size: 14.5px !important;
+        margin: 0 0 2px !important;
+      }
+
+      #report-preview .report-kop p {
+        margin: 1px 0 !important;
+        font-size: 10.5px !important;
+      }
+
+      #report-preview .report-sec {
+        margin-bottom: 6px !important;
+        padding-bottom: 5px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      #report-preview .report-sec:last-child {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+
+      #report-preview .report-sec h4 {
+        font-size: 11.5px !important;
+        margin: 0 0 2px !important;
+      }
+
+      #report-preview .report-sec p,
+      #report-preview .report-sec li {
+        margin: 1.5px 0 !important;
+        font-size: 10.5px !important;
+        line-height: 1.32 !important;
+      }
+
+      #report-preview .report-sec ul {
+        margin: 2px 0 0 16px !important;
+        padding: 0 !important;
+      }
+
+      #report-preview .report-sec .table th,
+      #report-preview .report-sec .table td {
+        padding: 3px 5px !important;
+        font-size: 9.8px !important;
+      }
+
+      #report-preview .report-sign-grid {
+        margin-top: 8px !important;
+        padding-top: 6px !important;
+        gap: 16px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      #report-preview .report-sign-box {
+        font-size: 10.5px !important;
+        line-height: 1.25 !important;
+      }
+
+      #report-preview .report-sign-space {
+        height: 28px !important;
       }
     }
   </style>
@@ -6226,12 +6304,23 @@
       }
 
       function createPdfBlob(docSpec) {
+        var compact = !!docSpec.compact;
         var PW = 595.28, PH = 841.89;
-        var ML = 48, MR = 48, MT = 52, MB = 54;
+        var ML = compact ? 34 : 48, MR = compact ? 34 : 48, MT = compact ? 34 : 52, MB = compact ? 36 : 54;
         var CW = PW - ML - MR;
         var pages = [];
         var curOps = [];
         var y = PH - MT;
+
+        var fTitle = compact ? 12 : 14;
+        var fSub = compact ? 9.5 : 10.5;
+        var fHead = compact ? 9.5 : 10.5;
+        var fBody = compact ? 8.6 : 9.8;
+        var fLine = compact ? 11.2 : 13.5;
+        var fKv = compact ? 8.5 : 9.5;
+        var fKvLine = compact ? 11 : 13;
+        var fTbl = compact ? 7.8 : 8.5;
+        var fTblLine = compact ? 10 : 11.5;
 
         function newPage() {
           if (curOps.length) pages.push(curOps);
@@ -6269,83 +6358,83 @@
 
         // Header / Kop
         if (docSpec.kopTop) {
-          centerText('F2', 10, y, docSpec.kopTop, '0.05 0.58 0.53 rg');
-          y -= 16;
+          centerText('F2', compact ? 9 : 10, y, docSpec.kopTop, '0.05 0.58 0.53 rg');
+          y -= compact ? 13 : 16;
         }
         if (docSpec.title) {
-          var tLines = wrapLine(docSpec.title, CW, 14, true);
+          var tLines = wrapLine(docSpec.title, CW, fTitle, true);
           tLines.forEach(function (ln) {
-            centerText('F2', 14, y, ln, '0.06 0.16 0.26 rg');
-            y -= 18;
+            centerText('F2', fTitle, y, ln, '0.06 0.16 0.26 rg');
+            y -= compact ? 15 : 18;
           });
         }
         if (docSpec.subtitle) {
-          var sLines = wrapLine(docSpec.subtitle, CW, 10.5, false);
+          var sLines = wrapLine(docSpec.subtitle, CW, fSub, false);
           sLines.forEach(function (ln) {
-            centerText('F1', 10.5, y, ln, '0.28 0.36 0.42 rg');
-            y -= 14;
+            centerText('F1', fSub, y, ln, '0.28 0.36 0.42 rg');
+            y -= compact ? 12 : 14;
           });
         }
-        ruleOp(ML, y - 2, PW - MR, 1.5, '0.05 0.58 0.53 RG');
-        y -= 14;
+        ruleOp(ML, y - 1, PW - MR, 1.3, '0.05 0.58 0.53 RG');
+        y -= compact ? 10 : 14;
 
         if (docSpec.metaLines && docSpec.metaLines.length) {
           docSpec.metaLines.forEach(function (ml) {
-            var mWrap = wrapLine(ml, CW, 9.5, false);
-            ensureSpace(mWrap.length * 13 + 4);
+            var mWrap = wrapLine(ml, CW, fKv, false);
+            ensureSpace(mWrap.length * fKvLine + 3);
             mWrap.forEach(function (ln) {
-              textOp('F1', 9.5, ML, y, ln, '0.25 0.35 0.40 rg');
-              y -= 13;
+              textOp('F1', fKv, ML, y, ln, '0.25 0.35 0.40 rg');
+              y -= fKvLine;
             });
           });
-          y -= 6;
+          y -= compact ? 3 : 6;
         }
 
         // Sections
         (docSpec.sections || []).forEach(function (sec) {
           if (sec.heading) {
-            ensureSpace(34);
-            rectFillOp(ML, y - 5, CW, 18, '0.92 0.98 0.96 rg');
-            textOp('F2', 10.5, ML + 6, y, sec.heading, '0.06 0.25 0.32 rg');
-            y -= 20;
+            ensureSpace(compact ? 24 : 34);
+            rectFillOp(ML, y - (compact ? 4 : 5), CW, compact ? 14 : 18, '0.92 0.98 0.96 rg');
+            textOp('F2', fHead, ML + 6, y, sec.heading, '0.06 0.25 0.32 rg');
+            y -= compact ? 15 : 20;
           }
 
           if (sec.kv && sec.kv.length) {
             sec.kv.forEach(function (pair) {
-              var valLines = wrapLine(pair[1] || '-', CW - 145, 9.5, false);
-              ensureSpace(valLines.length * 13 + 4);
-              textOp('F2', 9.5, ML + 4, y, pair[0] + ':', '0.12 0.22 0.28 rg');
+              var valLines = wrapLine(pair[1] || '-', CW - 140, fKv, false);
+              ensureSpace(valLines.length * fKvLine + 2);
+              textOp('F2', fKv, ML + 4, y, pair[0] + ':', '0.12 0.22 0.28 rg');
               valLines.forEach(function (vl, idx) {
-                textOp('F1', 9.5, ML + 145, y - idx * 13, vl, '0.15 0.20 0.25 rg');
+                textOp('F1', fKv, ML + 140, y - idx * fKvLine, vl, '0.15 0.20 0.25 rg');
               });
-              y -= valLines.length * 13 + 3;
+              y -= valLines.length * fKvLine + (compact ? 1.5 : 3);
             });
-            y -= 4;
+            y -= compact ? 2 : 4;
           }
 
           if (sec.paragraphs && sec.paragraphs.length) {
             sec.paragraphs.forEach(function (p) {
-              var pLines = wrapLine(p, CW - 4, 9.8, false);
-              ensureSpace(pLines.length * 13.5 + 4);
+              var pLines = wrapLine(p, CW - 4, fBody, false);
+              ensureSpace(pLines.length * fLine + 2);
               pLines.forEach(function (ln) {
-                textOp('F1', 9.8, ML + 2, y, ln, '0.12 0.17 0.22 rg');
-                y -= 13.5;
+                textOp('F1', fBody, ML + 2, y, ln, '0.12 0.17 0.22 rg');
+                y -= fLine;
               });
-              y -= 3;
+              y -= compact ? 1.5 : 3;
             });
           }
 
           if (sec.bullets && sec.bullets.length) {
             sec.bullets.forEach(function (b) {
-              var bLines = wrapLine(b, CW - 18, 9.5, false);
-              ensureSpace(bLines.length * 13 + 3);
-              textOp('F2', 9.5, ML + 4, y, '-', '0.05 0.58 0.53 rg');
+              var bLines = wrapLine(b, CW - 18, fKv, false);
+              ensureSpace(bLines.length * fKvLine + 2);
+              textOp('F2', fKv, ML + 4, y, '-', '0.05 0.58 0.53 rg');
               bLines.forEach(function (ln, idx) {
-                textOp('F1', 9.5, ML + 14, y - idx * 13, ln, '0.12 0.17 0.22 rg');
+                textOp('F1', fKv, ML + 14, y - idx * fKvLine, ln, '0.12 0.17 0.22 rg');
               });
-              y -= bLines.length * 13 + 2;
+              y -= bLines.length * fKvLine + (compact ? 1 : 2);
             });
-            y -= 4;
+            y -= compact ? 2 : 4;
           }
 
           if (sec.table && sec.table.headers && sec.table.headers.length) {
@@ -6357,12 +6446,12 @@
 
             function drawRow(cells, isHead, isAlt) {
               var wrapped = cells.map(function (c, idx) {
-                return wrapLine(c == null ? '' : String(c), Math.max(20, colW[idx] - 8), 8.5, isHead);
+                return wrapLine(c == null ? '' : String(c), Math.max(20, colW[idx] - 8), fTbl, isHead);
               });
               var maxLines = wrapped.reduce(function (m, arr) { return Math.max(m, arr.length); }, 1);
-              var rh = maxLines * 11.5 + 7;
+              var rh = maxLines * fTblLine + (compact ? 5 : 7);
               ensureSpace(rh + 2);
-              var rowBottom = y - rh + 5;
+              var rowBottom = y - rh + (compact ? 4 : 5);
               if (isHead) rectFillOp(ML, rowBottom, CW, rh, '0.06 0.46 0.43 rg');
               else if (isAlt) rectFillOp(ML, rowBottom, CW, rh, '0.96 0.99 0.98 rg');
               var cx = ML;
@@ -6370,7 +6459,7 @@
                 rectStrokeOp(cx, rowBottom, colW[c], rh, isHead ? '0.06 0.46 0.43 RG' : '0.84 0.89 0.90 RG');
                 var cLines = wrapped[c];
                 for (var li = 0; li < cLines.length; li++) {
-                  textOp(isHead ? 'F2' : 'F1', 8.5, cx + 4, y - 5 - li * 11.5, cLines[li], isHead ? '1 1 1 rg' : '0.10 0.16 0.22 rg');
+                  textOp(isHead ? 'F2' : 'F1', fTbl, cx + 4, y - (compact ? 4 : 5) - li * fTblLine, cLines[li], isHead ? '1 1 1 rg' : '0.10 0.16 0.22 rg');
                 }
                 cx += colW[c];
               }
@@ -6381,24 +6470,25 @@
             rows.forEach(function (r, idx) {
               drawRow(r, false, idx % 2 === 1);
             });
-            y -= 8;
+            y -= compact ? 4 : 8;
           }
 
-          y -= 6;
+          y -= compact ? 3 : 6;
         });
 
         if (docSpec.signBlocks && docSpec.signBlocks.length) {
-          ensureSpace(95);
-          y -= 10;
+          var sigH = compact ? 54 : 95;
+          ensureSpace(sigH);
+          y -= compact ? 4 : 10;
           var nSign = docSpec.signBlocks.length;
           var slotW = CW / nSign;
           docSpec.signBlocks.forEach(function (sb, idx) {
             var sx = ML + idx * slotW + 10;
-            textOp('F1', 9.5, sx, y, sb.role || '', '0.20 0.26 0.32 rg');
-            textOp('F2', 9.5, sx, y - 52, sb.name || '( .............................. )', '0.07 0.14 0.22 rg');
-            if (sb.sub) textOp('F1', 8.5, sx, y - 65, sb.sub, '0.35 0.42 0.48 rg');
+            textOp('F1', fKv, sx, y, sb.role || '', '0.20 0.26 0.32 rg');
+            textOp('F2', fKv, sx, y - (compact ? 30 : 52), sb.name || '( .............................. )', '0.07 0.14 0.22 rg');
+            if (sb.sub) textOp('F1', compact ? 7.8 : 8.5, sx, y - (compact ? 41 : 65), sb.sub, '0.35 0.42 0.48 rg');
           });
-          y -= 78;
+          y -= compact ? 48 : 78;
         }
 
         if (curOps.length || pages.length === 0) pages.push(curOps);
@@ -10618,7 +10708,7 @@
             paragraphs: [
               'Responden Fasilitator: ' + resFas.responden + ' (Rata-rata: ' + (resFas.rataKeseluruhan || '-') + '/5, Puas: ' + (resFas.persenPuas !== null ? resFas.persenPuas + '%' : '-') + ') | Responden Penyelenggaraan: ' + resPen.responden + ' (Rata-rata: ' + (resPen.rataKeseluruhan || '-') + '/5, Puas: ' + (resPen.persenPuas !== null ? resPen.persenPuas + '%' : '-') + ').'
             ],
-            table: {
+            table: (resFas.responden > 0 || resPen.responden > 0) ? {
               headers: ['Kategori', 'Aspek Penilaian', 'Rata-rata (1-5)'],
               widths: [1.4, 3.8, 1.2],
               rows: aspFas.map(function (a) {
@@ -10626,7 +10716,7 @@
               }).concat(aspPen.map(function (a) {
                 return ['Penyelenggara', a.nama, resPen.rata[a.kode] !== undefined ? String(resPen.rata[a.kode]) : '-'];
               }))
-            }
+            } : null
           },
           {
             heading: '6. KESIMPULAN, TINDAK LANJUT & LAMPIRAN',
@@ -10644,13 +10734,14 @@
 
         var tglCetak = fmtDateIdFull(window.App && window.App.today ? window.App.today : '2026-11-24');
         return {
+          compact: true,
           kopTop: L.nama + '  |  ' + L.akreditasi,
           title: tpl.judul_dokumen,
           subtitle: b.programName + ' - Angkatan ' + b.seq + ' (' + b.id + ')',
           sections: sections,
           signBlocks: [
             { role: 'Mengetahui, Pengendali Mutu / Pimpinan BDI', name: nar.namaPimpinan || '( .................................... )', sub: L.nama },
-            { role: (nar.tempatTtd || 'Jakarta') + ', ' + tglCetak + ' — Koordinator Pelatihan', name: nar.namaKoordinator || '( .................................... )', sub: 'Tim Training BDI' }
+            { role: (nar.tempatTtd || 'Jakarta') + ', ' + tglCetak + ' - Koordinator Pelatihan', name: nar.namaKoordinator || '( .................................... )', sub: 'Tim Training BDI' }
           ],
           footer: 'Laporan Resmi ' + b.id + ' - Tim Training BDI'
         };
