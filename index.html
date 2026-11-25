@@ -7119,6 +7119,35 @@
         return iso;
       }
 
+      function normalizeCalChecks(raw, keputusan, cancelled) {
+        if (raw && typeof raw === 'object') {
+          return {
+            kak: !!raw.kak,
+            ongoing: !!raw.ongoing,
+            jalan: !!raw.jalan,
+            reschedule: !!raw.reschedule,
+            cancel: !!raw.cancel
+          };
+        }
+        var k = cancelled ? 'cancel' : (keputusan || 'menunggu');
+        return {
+          kak: k === 'kak',
+          ongoing: k === 'ongoing',
+          jalan: k === 'jalan',
+          reschedule: k === 'reschedule',
+          cancel: k === 'cancel'
+        };
+      }
+
+      function primaryKeputusanFromChecks(ch) {
+        if (ch.cancel) return 'cancel';
+        if (ch.jalan) return 'jalan';
+        if (ch.reschedule) return 'reschedule';
+        if (ch.ongoing) return 'ongoing';
+        if (ch.kak) return 'kak';
+        return 'menunggu';
+      }
+
       function mergedBatch(seed) {
         var o = state.batches[seed.id] || {};
         var p = programMap[seed.program];
@@ -7128,8 +7157,9 @@
         var quotaMin = (o.quotaMin !== undefined && o.quotaMin !== null && Number(o.quotaMin) >= 0) ? Number(o.quotaMin) : defaultMin;
         var pendaftar = (o.pendaftar === 0 || o.pendaftar) ? Number(o.pendaftar) : def.pendaftar;
         var plannedMonth = (o.plannedMonth && /^\d{4}-\d{2}$/.test(o.plannedMonth)) ? o.plannedMonth : seed.plannedMonth;
-        var cancelled = o.cancelled !== undefined ? !!o.cancelled : (o.keputusan === 'cancel');
-        var keputusan = cancelled ? 'cancel' : (o.keputusan || def.keputusan);
+        var calChecks = normalizeCalChecks(o.calChecks, o.keputusan, o.cancelled);
+        var cancelled = o.calChecks ? !!calChecks.cancel : (o.cancelled !== undefined ? !!o.cancelled : (o.keputusan === 'cancel'));
+        var keputusan = o.calChecks ? primaryKeputusanFromChecks(calChecks) : (cancelled ? 'cancel' : (o.keputusan || def.keputusan));
         var b = {
           id: seed.id, program: seed.program, programName: p.name, short: p.short, seq: seed.seq,
           label: p.short + ' B' + seed.seq,
@@ -7151,21 +7181,21 @@
           metode: o.metode || '', tempat: o.tempat || '',
           registrationNo: o.registrationNo || '', cancelled: cancelled,
           keputusan: keputusan,
+          calChecks: calChecks,
           rescheduleFrom: o.rescheduleFrom || null,
           keputusanCatatan: o.keputusanCatatan !== undefined ? o.keputusanCatatan : (def.catatan || ''),
           keputusanUpdatedAt: o.keputusanUpdatedAt || null
         };
         STAGE_FIELDS.forEach(function (f) { b[f] = o[f] || null; });
         var syncDate = clampCovDate(b.keputusanUpdatedAt || new Date().toISOString().slice(0, 10));
-        if (b.keputusan === 'kak' && !b.kakStartedAt) {
+        if ((calChecks.kak || calChecks.ongoing || calChecks.jalan || b.keputusan === 'kak' || b.keputusan === 'ongoing' || b.keputusan === 'jalan') && !b.kakStartedAt) {
           b.kakStartedAt = syncDate;
-        } else if (b.keputusan === 'ongoing') {
-          if (!b.kakStartedAt) b.kakStartedAt = syncDate;
-          if (!b.kemenkesCompleteAt) b.kemenkesCompleteAt = syncDate;
-        } else if (b.keputusan === 'jalan') {
-          if (!b.kakStartedAt) b.kakStartedAt = syncDate;
-          if (!b.kemenkesCompleteAt) b.kemenkesCompleteAt = syncDate;
-          if (!b.publishedAt) b.publishedAt = syncDate;
+        }
+        if ((calChecks.ongoing || calChecks.jalan || b.keputusan === 'ongoing' || b.keputusan === 'jalan') && !b.kemenkesCompleteAt) {
+          b.kemenkesCompleteAt = syncDate;
+        }
+        if ((calChecks.jalan || b.keputusan === 'jalan') && !b.publishedAt) {
+          b.publishedAt = syncDate;
         }
         return b;
       }
@@ -7180,30 +7210,42 @@
       function updateBatch(id, patch) {
         if (!getBatch(id)) throw new Error('Batch tidak ditemukan: ' + id);
         var o = state.batches[id] || {};
-        var prevKep = o.keputusan || 'menunggu';
+        var prevCh = normalizeCalChecks(o.calChecks, o.keputusan, o.cancelled);
+        var hasCalChecksPatch = !!patch.calChecks;
         Object.keys(patch).forEach(function (k) { o[k] = patch[k]; });
-        if (patch.keputusan === 'cancel') {
-          o.cancelled = true;
-        } else if (patch.keputusan && patch.cancelled === undefined) {
-          o.cancelled = false;
-        } else if (patch.cancelled === true && patch.keputusan === undefined) {
-          o.keputusan = 'cancel';
-        } else if (patch.cancelled === false && o.keputusan === 'cancel' && patch.keputusan === undefined) {
-          o.keputusan = 'menunggu';
+        var ch;
+        if (hasCalChecksPatch) {
+          ch = normalizeCalChecks(patch.calChecks);
+        } else {
+          ch = normalizeCalChecks(prevCh);
+          if (patch.keputusan === 'menunggu') {
+            ch = { kak: false, ongoing: false, jalan: false, reschedule: false, cancel: false };
+          } else if (patch.keputusan === 'cancel' || patch.cancelled === true) {
+            ch.cancel = true;
+          } else if (patch.cancelled === false && patch.keputusan === undefined) {
+            ch.cancel = false;
+          } else if (patch.keputusan && ch[patch.keputusan] !== undefined) {
+            ch[patch.keputusan] = true;
+            ch.cancel = false;
+          }
         }
+        o.calChecks = ch;
+        o.keputusan = primaryKeputusanFromChecks(ch);
+        o.cancelled = !!ch.cancel;
         var syncDate = clampCovDate(o.keputusanUpdatedAt || new Date().toISOString().slice(0, 10));
-        if (patch.keputusan === 'kak') {
-          o.kakStartedAt = o.kakStartedAt || syncDate;
-          o.kakDraftDoneAt = null; o.kakUploadedAt = null; o.kemenkesCompleteAt = null; o.registrationLetterAt = null; o.publishedAt = null;
-        } else if (patch.keputusan === 'ongoing') {
-          o.kakStartedAt = o.kakStartedAt || syncDate;
-          o.kemenkesCompleteAt = o.kemenkesCompleteAt || syncDate;
-          o.registrationLetterAt = null; o.publishedAt = null;
-        } else if (patch.keputusan === 'jalan') {
+        if (ch.jalan) {
           o.kakStartedAt = o.kakStartedAt || syncDate;
           o.kemenkesCompleteAt = o.kemenkesCompleteAt || syncDate;
           o.publishedAt = o.publishedAt || syncDate;
-        } else if (patch.keputusan === 'menunggu' && (prevKep === 'kak' || prevKep === 'ongoing' || prevKep === 'jalan')) {
+        } else if (ch.ongoing) {
+          o.kakStartedAt = o.kakStartedAt || syncDate;
+          o.kemenkesCompleteAt = o.kemenkesCompleteAt || syncDate;
+          o.publishedAt = null;
+        } else if (ch.kak) {
+          o.kakStartedAt = o.kakStartedAt || syncDate;
+          o.kemenkesCompleteAt = null;
+          o.publishedAt = null;
+        } else if (hasCalChecksPatch || patch.keputusan === 'menunggu') {
           STAGE_FIELDS.forEach(function (f) { o[f] = null; });
         }
         state.batches[id] = o;
@@ -8871,13 +8913,24 @@
 
         var cnt = { all: batches.length, kak: 0, ongoing: 0, jalan: 0, reschedule: 0, cancel: 0, menunggu: 0 };
         batches.forEach(function (b) {
-          var k = b.cancelled ? 'cancel' : (b.keputusan || 'menunggu');
-          if (cnt[k] !== undefined) cnt[k]++;
+          var ch = b.calChecks || {};
+          var anyCh = ch.kak || ch.ongoing || ch.jalan || ch.reschedule || ch.cancel;
+          if (!anyCh) cnt.menunggu++;
+          if (ch.kak) cnt.kak++;
+          if (ch.ongoing) cnt.ongoing++;
+          if (ch.jalan) cnt.jalan++;
+          if (ch.reschedule) cnt.reschedule++;
+          if (ch.cancel || b.cancelled) cnt.cancel++;
         });
 
         var filtered = batches.filter(function (b) {
-          var k = b.cancelled ? 'cancel' : (b.keputusan || 'menunggu');
-          if (f.calStatus && k !== f.calStatus) return false;
+          var ch = b.calChecks || {};
+          var anyCh = ch.kak || ch.ongoing || ch.jalan || ch.reschedule || ch.cancel;
+          if (f.calStatus) {
+            if (f.calStatus === 'menunggu') { if (anyCh) return false; }
+            else if (f.calStatus === 'cancel') { if (!ch.cancel && !b.cancelled) return false; }
+            else if (!ch[f.calStatus] && b.keputusan !== f.calStatus) return false;
+          }
           if (f.calMonth) {
             var ym = b.eventStart ? b.eventStart.slice(0, 7) : b.plannedMonth;
             if (ym !== f.calMonth) return false;
@@ -9283,19 +9336,23 @@
           var counts = { '': rows.length, kak: 0, ongoing: 0, jalan: 0, reschedule: 0, cancel: 0 };
           allRows.forEach(function (r) {
             var b = r.batch;
-            if (b.cancelled || b.keputusan === 'cancel') counts.cancel++;
-            else if (b.keputusan === 'kak') counts.kak++;
-            else if (b.keputusan === 'ongoing') counts.ongoing++;
-            else if (b.keputusan === 'jalan') counts.jalan++;
-            else if (b.keputusan === 'reschedule') counts.reschedule++;
+            var ch = b.calChecks || {};
+            if (ch.cancel || b.cancelled || b.keputusan === 'cancel') counts.cancel++;
+            if (ch.kak || b.keputusan === 'kak') counts.kak++;
+            if (ch.ongoing || b.keputusan === 'ongoing') counts.ongoing++;
+            if (ch.jalan || b.keputusan === 'jalan') counts.jalan++;
+            if (ch.reschedule || b.keputusan === 'reschedule') counts.reschedule++;
           });
 
           var q = f.q.trim().toLowerCase();
           var base = f.keputusan === 'cancel' ? allRows : rows;
           var shown = base.filter(function (r) {
             var b = r.batch;
-            var kep = b.cancelled ? 'cancel' : (b.keputusan || 'menunggu');
-            if (f.keputusan && kep !== f.keputusan) return false;
+            var ch = b.calChecks || {};
+            if (f.keputusan) {
+              var matchKep = f.keputusan === 'cancel' ? (ch.cancel || b.cancelled || b.keputusan === 'cancel') : (!!ch[f.keputusan] || b.keputusan === f.keputusan);
+              if (!matchKep) return false;
+            }
             if (f.bulan) {
               var month = b.eventStart ? b.eventStart.slice(0, 7) : b.plannedMonth;
               if (month !== f.bulan) return false;
@@ -10040,17 +10097,15 @@
 
       var JENIS_MATERI = {
         modul: 'Modul Pelatihan',
-        buku: 'Buku / E-Book Referensi',
-        bahan_tayang: 'Bahan Tayang (Slide)',
+        cv_narasumber: 'CV Narasumber',
         informasi_penyelenggaraan: 'Informasi Penyelenggaraan',
         evaluasi: 'Instrumen Evaluasi',
         video: 'Video Pembelajaran',
         lainnya: 'Lainnya'
       };
       var DEFAULT_FOLDERS = [
-        { id: 'modul', nama: 'Modul Pelatihan', deskripsi: 'Modul praktik, lembar kerja, & buku kerja peserta', jenisDefault: 'modul' },
-        { id: 'buku', nama: 'Buku Panduan & Referensi', deskripsi: 'E-book PDF, buku ajar, & pedoman klinis', jenisDefault: 'buku' },
-        { id: 'bahan_tayang', nama: 'Bahan Tayang (Slide)', deskripsi: 'Slide presentasi PPT/PDF fasilitator per sesi', jenisDefault: 'bahan_tayang' },
+        { id: 'modul', nama: 'Modul Pelatihan', deskripsi: 'Modul praktik, lembar kerja, & bahan ajar peserta', jenisDefault: 'modul' },
+        { id: 'cv_narasumber', nama: 'CV Narasumber', deskripsi: 'Curriculum Vitae, STR/SIP & sertifikat narasumber/fasilitator', jenisDefault: 'cv_narasumber' },
         { id: 'informasi_penyelenggaraan', nama: 'Informasi Penyelenggaraan', deskripsi: 'Jadwal, tata tertib, & info LMS H-1 Kemenkes', jenisDefault: 'informasi_penyelenggaraan' },
         { id: 'evaluasi', nama: 'Instrumen Evaluasi & Soal', deskripsi: 'Kisi-kisi, soal Pre/Post Test, & rubrik OSCE', jenisDefault: 'evaluasi' }
       ];
@@ -10137,9 +10192,8 @@
       }
 
       function itemFolderId(m) {
-        if (m.folderId) return m.folderId;
-        if (m.jenis === 'buku') return 'buku';
-        if (m.jenis === 'bahan_tayang') return 'bahan_tayang';
+        if (m.folderId && m.folderId !== 'buku' && m.folderId !== 'bahan_tayang') return m.folderId;
+        if (m.jenis === 'cv_narasumber') return 'cv_narasumber';
         if (m.jenis === 'informasi_penyelenggaraan') return 'informasi_penyelenggaraan';
         if (m.jenis === 'evaluasi') return 'evaluasi';
         return 'modul';
@@ -10341,12 +10395,12 @@
             ' <span class="small">(Target final internal: <strong>' + UI.fmtDate(evalMat.targetFinal, 'med') + '</strong> · Tenggat unggah H-1: <strong>' + UI.fmtDate(evalMat.tenggatUnggah, 'med') + '</strong>)</span></p></div>';
         }
 
-        html += '<section class="panel"><div class="panel-head"><h3 class="panel-title">📂 Folder Modul, Buku &amp; Materi Pembelajaran <span class="count">' + pel.materi.length + ' berkas</span></h3>' +
+        html += '<section class="panel"><div class="panel-head"><h3 class="panel-title">📂 Folder Modul, CV Narasumber &amp; Materi Pembelajaran <span class="count">' + pel.materi.length + ' berkas</span></h3>' +
           '<div class="toolbar-actions">' +
           '<button type="button" class="btn btn-sm" data-add-folder>+ Buat Folder</button>' +
           '<button type="button" class="btn btn-sm btn-primary" data-add-materi>+ Tambah Modul / Tautan</button>' +
           '</div></div>' +
-          '<p class="panel-sub">Kelola modul, buku panduan PDF, bahan tayang, dan berkas H-1 per folder. Klik folder untuk menyaring atau unggah langsung file modul/buku ke dalam folder tersebut.</p>';
+          '<p class="panel-sub">Kelola modul pelatihan, CV narasumber, informasi penyelenggaraan, dan berkas H-1 per folder. Klik folder untuk menyaring atau unggah langsung file PDF/DOCX/PPT ke dalam folder tersebut.</p>';
 
         if (evalMat && evalMat.kurang.length) {
           html += '<div class="notice notice-warn"><p><strong>Masih kurang ' + evalMat.kurang.length + ' syarat wajib untuk diunggah:</strong> ' +
@@ -10360,7 +10414,7 @@
           '<button type="button" class="mat-folder-card' + (activeFolderId === 'all' ? ' active' : '') + '" data-sel-folder="all">' +
           '<div class="mat-folder-top"><span class="mat-folder-ico">' + (activeFolderId === 'all' ? '📂' : '🗂️') + '</span><span class="badge badge-info">' + pel.materi.length + ' item</span></div>' +
           '<div class="mat-folder-name">Semua Folder</div>' +
-          '<div class="mat-folder-desc">Tampilkan seluruh modul, buku &amp; bahan ajar batch</div>' +
+          '<div class="mat-folder-desc">Tampilkan seluruh modul, CV narasumber &amp; berkas batch</div>' +
           '</button>' +
           folders.map(function (fl) {
             var isAct = activeFolderId === fl.id;
@@ -10380,13 +10434,13 @@
         var targetFolderName = activeFolder ? activeFolder.nama : 'Modul Pelatihan';
         html += '<div class="mat-upload-strip">' +
           '<div><strong>' + (activeFolder ? '📂 Folder: ' + esc(activeFolder.nama) : '🗂️ Unggah Cepat ke Folder Modul') + '</strong>' +
-          '<div class="small muted">Pilih langsung file PDF Modul, E-Book, Slide PPT, atau DOCX dari komputer/HP Anda (tersimpan aman di browser).</div></div>' +
+          '<div class="small muted">Pilih langsung file PDF Modul, CV Narasumber, atau DOCX/PPT dari komputer/HP Anda (tersimpan aman di browser).</div></div>' +
           '<label class="btn btn-sm btn-primary" style="cursor:pointer;margin:0">⬆️ Upload File ke "' + esc(targetFolderName) + '"' +
           '<input type="file" id="mat-upload-file" multiple accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.epub,.txt,.png,.jpg,.jpeg" style="display:none"></label>' +
           '</div>';
 
         if (!visibleItems.length) {
-          html += '<div class="empty-inline"><p>Belum ada modul, buku, atau tautan di ' + (activeFolder ? 'folder <strong>' + esc(activeFolder.nama) + '</strong>' : 'daftar materi') + '. Unggah file di atas atau klik <strong>+ Tambah Modul / Tautan</strong>.</p></div>';
+          html += '<div class="empty-inline"><p>Belum ada berkas atau tautan di ' + (activeFolder ? 'folder <strong>' + esc(activeFolder.nama) + '</strong>' : 'daftar materi') + '. Unggah file di atas atau klik <strong>+ Tambah Modul / Tautan</strong>.</p></div>';
         } else {
           html += '<div class="table-wrap"><table class="table table-compact"><thead><tr><th>Judul Modul / Berkas</th><th>Folder &amp; Jenis</th><th>Cakupan</th><th>Berkas / Tautan</th><th>Status</th><th>Aksi</th></tr></thead><tbody>' +
             visibleItems.map(function (entry) {
@@ -12574,9 +12628,25 @@
       function monthStartIso(ym) { return ym + '-01'; }
       function monthEndIso(ym) { return ym + '-' + String(daysInMonth(ym)).padStart(2, '0'); }
 
+      function renderMultiStatusBadges(b) {
+        var ch = b.calChecks || {};
+        var out = [];
+        if (ch.kak) out.push(statusBadge('kak'));
+        if (ch.ongoing) out.push(statusBadge('ongoing'));
+        if (ch.jalan) out.push(statusBadge('terlaksana'));
+        if (ch.reschedule) out.push(statusBadge('reschedule'));
+        if (ch.cancel) out.push(statusBadge('cancel'));
+        return out.length ? out.join(' ') : statusBadge('jadwal');
+      }
+
       function matchesFilter(b, s, ignoreSearch) {
         if (s.cat && b.category !== s.cat) return false;
-        if (!s[statusKey(b)]) return false;
+        var ch = b.calChecks || {};
+        var anyCh = ch.kak || ch.ongoing || ch.jalan || ch.reschedule || ch.cancel;
+        var stMatch = anyCh
+          ? ((ch.kak && s.kak) || (ch.ongoing && s.ongoing) || (ch.jalan && s.terlaksana) || (ch.reschedule && s.reschedule) || (ch.cancel && s.cancel))
+          : !!s.jadwal;
+        if (!stMatch) return false;
         if (!ignoreSearch && s.q) {
           var q = s.q.trim().toLowerCase();
           if (q && (b.label + ' ' + b.programName + ' ' + (b.category || '')).toLowerCase().indexOf(q) === -1) return false;
@@ -12701,6 +12771,7 @@
           rows.map(function (it) {
             var b = it.b;
             var st = it.status;
+            var ch = b.calChecks || {};
             var rowCls = st === 'kak' ? 'row-kak' : st === 'ongoing' ? 'row-ongoing' : st === 'terlaksana' ? 'row-terlaksana' : st === 'reschedule' ? 'row-reschedule' : st === 'cancel' ? 'row-cancel' : '';
             var nTodo = todoByBatch[b.id] || 0;
             return '<tr class="' + rowCls + '">' +
@@ -12711,7 +12782,7 @@
               '<td style="min-width:175px">' +
               '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
               '<a class="strong" href="#/batch/' + encodeURIComponent(b.id) + '">' + esc(b.label) + '</a>' +
-              statusBadge(st) +
+              renderMultiStatusBadges(b) +
               (nTodo > 0 ? '<a class="badge badge-aman" href="#/todo">✓ ' + nTodo + ' To-Do</a>' : '') +
               '<button type="button" class="link-btn small" data-cal-add-todo="' + esc(b.id) + '">+ To-Do</button>' +
               '<button type="button" class="link-btn small" data-quota-btn="' + esc(b.id) + '">Ubah</button>' +
@@ -12720,11 +12791,11 @@
               (b.keputusanCatatan ? '<div class="small muted">Catatan: ' + esc(b.keputusanCatatan) + '</div>' : '') +
               '</td>' +
               (s.harga ? '<td class="nowrap"><div><strong>Ext:</strong> ' + UI.rupiah(b.price) + '</div><div class="small muted"><strong>Int:</strong> ' + UI.rupiah(b.intPrice) + '</div></td>' : '') +
-              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-kak" data-chk-status="kak" data-bid="' + esc(b.id) + '" aria-label="KAK ' + esc(b.label) + '"' + (st === 'kak' ? ' checked' : '') + '></td>' +
-              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-ongoing" data-chk-status="ongoing" data-bid="' + esc(b.id) + '" aria-label="On Going ' + esc(b.label) + '"' + (st === 'ongoing' ? ' checked' : '') + '></td>' +
-              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-terlaksana" data-chk-status="jalan" data-bid="' + esc(b.id) + '" aria-label="Terlaksana ' + esc(b.label) + '"' + (st === 'terlaksana' ? ' checked' : '') + '></td>' +
-              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-reschedule" data-chk-status="reschedule" data-bid="' + esc(b.id) + '" aria-label="Reschedule ' + esc(b.label) + '"' + (st === 'reschedule' ? ' checked' : '') + '></td>' +
-              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-cancel" data-chk-status="cancel" data-bid="' + esc(b.id) + '" aria-label="Cancel ' + esc(b.label) + '"' + (st === 'cancel' ? ' checked' : '') + '></td>' +
+              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-kak" data-chk-status="kak" data-bid="' + esc(b.id) + '" aria-label="KAK ' + esc(b.label) + '"' + (ch.kak ? ' checked' : '') + '></td>' +
+              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-ongoing" data-chk-status="ongoing" data-bid="' + esc(b.id) + '" aria-label="On Going ' + esc(b.label) + '"' + (ch.ongoing ? ' checked' : '') + '></td>' +
+              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-terlaksana" data-chk-status="jalan" data-bid="' + esc(b.id) + '" aria-label="Terlaksana ' + esc(b.label) + '"' + (ch.jalan ? ' checked' : '') + '></td>' +
+              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-reschedule" data-chk-status="reschedule" data-bid="' + esc(b.id) + '" aria-label="Reschedule ' + esc(b.label) + '"' + (ch.reschedule ? ' checked' : '') + '></td>' +
+              '<td class="chk-col"><input type="checkbox" class="cal-chk chk-cancel" data-chk-status="cancel" data-bid="' + esc(b.id) + '" aria-label="Cancel ' + esc(b.label) + '"' + (ch.cancel ? ' checked' : '') + '></td>' +
               '</tr>';
           }).join('') +
           '</tbody></table></div></section>';
@@ -12779,7 +12850,14 @@
           var countByMonth = {};
           batches.forEach(function (b) {
             if (s.cat && b.category !== s.cat) return;
-            countByStatus[statusKey(b)]++;
+            var ch = b.calChecks || {};
+            var anyCh = ch.kak || ch.ongoing || ch.jalan || ch.reschedule || ch.cancel;
+            if (!anyCh) countByStatus.jadwal++;
+            if (ch.kak) countByStatus.kak++;
+            if (ch.ongoing) countByStatus.ongoing++;
+            if (ch.jalan) countByStatus.terlaksana++;
+            if (ch.reschedule) countByStatus.reschedule++;
+            if (ch.cancel) countByStatus.cancel++;
             var ym = b.eventStart ? b.eventStart.slice(0, 7) : b.plannedMonth;
             countByMonth[ym] = (countByMonth[ym] || 0) + 1;
           });
@@ -12930,33 +13008,13 @@
               var id = chk.getAttribute('data-bid');
               var b = Store.getBatch(id);
               if (!b) return;
-              if (!chk.checked) {
-                Store.updateBatch(id, { keputusan: 'menunggu', cancelled: false, keputusanUpdatedAt: ctx.today });
-                UI.toast(b.label + ' dikembalikan ke Jadwal Pelatihan.', 'ok');
-                ctx.refresh();
-                return;
-              }
-              if (mode === 'kak') {
-                Store.updateBatch(id, { keputusan: 'kak', cancelled: false, keputusanUpdatedAt: ctx.today });
-                UI.toast(b.label + ' diceklis KAK (tersinkron ke Tracker KAK).', 'ok');
-                ctx.refresh();
-              } else if (mode === 'ongoing') {
-                Store.updateBatch(id, { keputusan: 'ongoing', cancelled: false, keputusanUpdatedAt: ctx.today });
-                UI.toast(b.label + ' diceklis On Going.', 'ok');
-                ctx.refresh();
-              } else if (mode === 'jalan') {
-                Store.updateBatch(id, { keputusan: 'jalan', cancelled: false, keputusanUpdatedAt: ctx.today });
-                UI.toast(b.label + ' diceklis Terlaksana.', 'ok');
-                ctx.refresh();
-              } else if (mode === 'cancel') {
-                Store.updateBatch(id, { keputusan: 'cancel', cancelled: true, keputusanUpdatedAt: ctx.today });
-                UI.toast(b.label + ' diceklis Cancel.', 'ok');
-                ctx.refresh();
-              } else if (mode === 'reschedule') {
-                Store.updateBatch(id, { keputusan: 'reschedule', cancelled: false, keputusanUpdatedAt: ctx.today });
-                ctx.refresh();
-                UI.openQuotaDecisionDialog(id, 'reschedule', function () { ctx.refresh(); });
-              }
+              var nextChecks = Object.assign({ kak: false, ongoing: false, jalan: false, reschedule: false, cancel: false }, b.calChecks || {});
+              nextChecks[mode] = chk.checked;
+              Store.updateBatch(id, { calChecks: nextChecks, keputusanUpdatedAt: ctx.today });
+              var labelMap = { kak: 'KAK', ongoing: 'On Going', jalan: 'Terlaksana', reschedule: 'Reschedule', cancel: 'Cancel' };
+              var lbl = labelMap[mode] || mode;
+              UI.toast(chk.checked ? (b.label + ' diceklis ' + lbl + '.') : (b.label + ' batal ceklis ' + lbl + '.'), 'ok');
+              ctx.refresh();
             });
           });
           root.querySelectorAll('[data-cal-add-todo]').forEach(function (btn) {
